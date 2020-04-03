@@ -27,6 +27,7 @@
 					{!! Form::close() !!}
 				</div>
 			</div>
+			<example-component></example-component>
 			<table class="table table-dark table-hover table-bordered table-sm">
 				<thead>
 					<tr align="center">
