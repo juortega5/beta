@@ -16,6 +16,12 @@ class ProductosController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->ajax()) 
+        {
+            //$productos = Producto::with('tipoUnidad')->get();
+           $productos = Producto::with('tipoUnidad')->paginate(5);
+            return response()->json($productos);
+        }
         if($request->input('buscar'))
         {
             $productos = Producto::buscarProducto($request->input('buscar'))->paginate(5);
