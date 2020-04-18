@@ -1,48 +1,88 @@
 <template>
 	<div>
-	<table class="table table-dark table-hover table-bordered table-sm">
-		<thead>
-			<tr align="center">
-				<th colspan="4">Listado de Productos</th>
-				<th><a class="btn btn-success btn-sm" href="create">Nuevo+</a></th>
-			</tr>
-		    <tr align="center">
-		      <th scope="col">Nombre del producto</th>
-		      <th scope="col">Unidad de medida</th>
-		      <th scope="col">Precio por unidad</th>
-		      <th scope="col">Editar</th>
-		      <th scope="col">Eliminar</th>
-		    </tr>
-		</thead>
-			<tbody v-for="producto in productos">
-		    <tr>
-		      <td>{{ producto.nombre_producto }}</td>
-		      <td align="center">{{ producto.tipo_unidad.unidad }}</td>      
-		      <td align="center">{{ producto.precio_venta }}</td>
-		      <td align="center"><a class="btn btn-primary btn-sm" href="productos/edit">Editar</a></td>
-		      <td align="center">elimnar</td>
-		    </tr>
-		</tbody>
-	</table>
-	 <pagination :data="prueba"   @pagination-change-page="getResults"></pagination>
-	 </div>	
+		<table class="table table-dark table-hover table-bordered table-sm">
+			<thead>
+				<tr align="center">
+					<th colspan="4">Listado de Productos</th>
+					<th>
+						<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
+						  Nuevo+
+						</button>
+					</th>
+				</tr>
+			    <tr align="center">
+			      <th scope="col">Nombre del producto</th>
+			      <th scope="col">Unidad de medida</th>
+			      <th scope="col">Precio por unidad</th>
+			      <th scope="col">Editar</th>
+			      <th scope="col">Eliminar</th>
+			    </tr>
+			</thead>
+				<tbody>
+					<tr v-for="producto in productos">
+						<td>{{ producto.nombre_producto }}</td>
+						<td align="center">{{ producto.tipo_unidad.unidad }}</td>      
+						<td align="center">{{ producto.precio_venta }}</td>
+						<td align="center">
+							<button type="button" @click="editProductos(producto)" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
+							  Editar
+							</button>
+						</td>
+						<td align="center">
+							<button type="button" @click="deleteProductos(producto)" class="btn btn-danger btn-sm" data-toggle="modal" data-backdrop="static" data-target="#deleteProducto">
+							  Eliminar
+							</button>
+						</td>
+					</tr>
+				</tbody>
+		</table>
+		<pagination :data="paginacion" @pagination-change-page="getResults"></pagination>
+	</div>	
 </template>
+<style scoped>
+	.pagination { justify-content: center!important; } 
+</style>
 <script>
+	import EventBus from '../event-bus';
 	export default {
-		 data(){
-		 	return {
-		 		productos: {},
-		 		prueba: {}
-		 	}
-		 },
-		 mounted(){
-		 	this.getResults();
-		 	//axios.get('http://beta.test/productos').then(response => (this.productos = response.data.data))
-		 },
-		 methods: {
-        getResults(page = 1) {
-            axios.get('http://beta.test/productos?page=' + page).then(response => { this.productos = response.data.data;  this.prueba = response.data; });
-        }
-    }
+		data(){
+			return {
+				productos: {},
+				paginacion: {}
+			}
+		},
+		mounted(){
+			this.getResults();
+		},
+		created(){
+			EventBus.$on('producto-added', data => {
+				this.productos.push(data)
+				this.getResults()
+			});
+			EventBus.$on('producto-destroy', data => {
+				this.getResults()
+			});
+		},
+		updated(){
+			EventBus.$on('producto-update', data => {
+				this.getResults()
+			});
+			
+		},
+		methods: {
+			getResults(page = 1) {
+				axios.get('http://beta.test/productos?page=' + page).then(response => { 
+					this.productos = response.data.productos.data
+					this.paginacion = response.data.productos; 
+				});
+			},
+			editProductos(data){
+				EventBus.$emit('producto-edit',data)
+			},
+			deleteProductos(data){
+				EventBus.$emit('producto-delete',data)
+			}
+		},
+		
 	}
 </script>

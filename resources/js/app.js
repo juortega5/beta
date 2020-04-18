@@ -22,7 +22,9 @@ Vue.use(require('vue-resource'));
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('tabla-component', require('./components/TablaComponent.vue').default);
-Vue.component('paginacion-component', require('./components/PaginacionComponent.vue'));
+Vue.component('modal-component', require('./components/ModalComponent.vue').default);
+Vue.component('modaldelete-component', require('./components/ModalDeleteComponent.vue').default);
+Vue.component('buscar-component', require('./components/BuscarComponent.vue').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**

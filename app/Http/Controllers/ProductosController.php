@@ -18,19 +18,19 @@ class ProductosController extends Controller
     {
         if ($request->ajax()) 
         {
-            //$productos = Producto::with('tipoUnidad')->get();
-           $productos = Producto::with('tipoUnidad')->paginate(5);
-            return response()->json($productos);
+            if($request->input('buscar'))
+            {
+                $productos = Producto::buscarProducto($request->input('buscar'))->paginate(1);
+            }
+            else
+            {
+                $productos = Producto::with('tipoUnidad')->paginate(3);
+            }
+            $selectUnidades = Producto::selectUnidades();
+            $data = ["productos"=>$productos,"unidades"=> $selectUnidades,"buscar"=>$request->input('buscar')];
+            return response()->json($data,200);
         }
-        if($request->input('buscar'))
-        {
-            $productos = Producto::buscarProducto($request->input('buscar'))->paginate(5);
-        }
-        else
-        {
-            $productos = Producto::paginate(5);
-        }
-        return view('productos.index',compact('productos'));
+        return view('productos.index');
     }
 
     /**
@@ -40,8 +40,7 @@ class ProductosController extends Controller
      */
     public function create()
     {
-        $select = Producto::selectUnidades();
-        return view('productos.create',compact('select'));
+        
     }
 
     /**
@@ -52,14 +51,18 @@ class ProductosController extends Controller
      */
     public function store(StoreProductosRequest $request)
     {
-        $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
-        $producto = new Producto();
-        $producto->nombre_producto = $request->input('nombre_producto');
-        $producto->slug = Str::of($request->input('nombre_producto'))->slug('-');
-        $producto->id_unidades = $request->input('id_unidades');
-        $producto->precio_venta = $request->input('precio_venta');
-        $producto->save();
-        return redirect()->route('productos.create')->with('status','Nuevo producto creado');
+        if ($request->ajax()) 
+        {
+            $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
+            $producto = new Producto();
+            $producto->nombre_producto = $request->input('nombre_producto');
+            $producto->slug = Str::of($request->input('nombre_producto'))->slug('-');
+            $producto->id_unidades = $request->input('id_unidades');
+            $producto->precio_venta = $request->input('precio_venta');
+            $producto->save();
+            $productos = Producto::with('tipoUnidad')->where('productos.slug', $producto->slug)->first();
+            return response()->json(["message"=>"Producto creado","productos"=>$productos],200);
+        }
     }
 
     /**
@@ -70,7 +73,7 @@ class ProductosController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -81,8 +84,7 @@ class ProductosController extends Controller
      */
     public function edit(Producto $producto)
     {
-        $select = Producto::selectUnidades();
-        return view('productos.edit',compact('producto','select'));
+        
     }
 
     /**
@@ -94,17 +96,23 @@ class ProductosController extends Controller
      */
     public function update(StoreProductosRequest $request, Producto $producto)
     {
-        $comparar = Str::of($request->input('nombre_producto'))->slug('-');
-        if ($comparar == $producto->slug || !Producto::where('slug', $comparar)->exists()) 
+        if ($request->ajax()) 
         {
-            $producto->slug = $comparar;
-            $producto->fill($request->all());
-            $producto->save();
-            return redirect()->route('productos.index')->with('status','Producto actualizado');
-        }
-        else
-        {
-            $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
+            $comparar = Str::of($request->input('nombre_producto'))->slug('-');
+            if ($comparar == $producto->slug || !Producto::where('slug', $comparar)->exists()) 
+            {
+                $producto->slug = $comparar;
+                $producto->nombre_producto = $request->input('nombre_producto');
+                $producto->id_unidades = $request->input('id_unidades');
+                $producto->precio_venta = $request->input('precio_venta');
+                $producto->save();
+                $productos = Producto::with('tipoUnidad')->where('productos.slug', $producto->slug)->first();
+                return response()->json(["message"=>"Producto editado","slug"=>$producto->slug,"productos"=>$productos],200);
+            }
+            else
+            {
+                $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
+            }
         }
     }
 
@@ -117,6 +125,6 @@ class ProductosController extends Controller
     public function destroy(Producto $producto)
     {
         $producto->delete();
-        return redirect()->route('productos.index')->with('status','Producto eliminado');;
+        return response()->json(["message"=>"Producto eliminado"],200);
     }
 }
