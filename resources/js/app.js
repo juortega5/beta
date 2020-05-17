@@ -19,14 +19,18 @@ Vue.use(require('vue-resource'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('tabla-component', require('./components/TablaComponent.vue').default);
-Vue.component('modal-component', require('./components/ModalComponent.vue').default);
-Vue.component('modaldelete-component', require('./components/ModalDeleteComponent.vue').default);
-Vue.component('buscar-component', require('./components/BuscarComponent.vue').default);
+/**
+ *Funcionalidades axios para los productos.
+*/
+Vue.component('tablaproducto-component', require('./components/productos/TablaComponent.vue').default);
+Vue.component('modalproducto-component', require('./components/productos/ModalComponent.vue').default);
+Vue.component('modaldeleteproducto-component', require('./components/productos/ModalDeleteComponent.vue').default);
+Vue.component('buscarproducto-component', require('./components/productos/BuscarComponent.vue').default);
+/**
+ *Paginación general.
+*/
 Vue.component('pagination', require('laravel-vue-pagination'));
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -36,3 +40,4 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 const app = new Vue({
     el: '#app',
 });
+

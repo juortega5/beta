@@ -43,12 +43,13 @@
 	.pagination { justify-content: center!important; } 
 </style>
 <script>
-	import EventBus from '../event-bus';
+	import EventBus from '../../event-bus';
 	export default {
 		data(){
 			return {
 				productos: {},
-				paginacion: {}
+				paginacion: {},
+				buscar: null
 			}
 		},
 		mounted(){
@@ -62,16 +63,20 @@
 			EventBus.$on('producto-destroy', data => {
 				this.getResults()
 			});
+			EventBus.$on('producto-search', data => {
+				this.productos = data.productos.data
+				this.paginacion = data.productos 
+				this.buscar = data.buscar;
+			});
 		},
 		updated(){
 			EventBus.$on('producto-update', data => {
 				this.getResults()
 			});
-			
 		},
 		methods: {
 			getResults(page = 1) {
-				axios.get('http://beta.test/productos?page=' + page).then(response => { 
+					axios.get('http://beta.test/productos?page=' +page+ '&buscar='+this.buscar).then(response => { 
 					this.productos = response.data.productos.data
 					this.paginacion = response.data.productos; 
 				});
@@ -83,6 +88,5 @@
 				EventBus.$emit('producto-delete',data)
 			}
 		},
-		
 	}
 </script>

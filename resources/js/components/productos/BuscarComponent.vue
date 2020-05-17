@@ -4,7 +4,7 @@
 	</div>
 </template>
 <script>
-	import EventBus from '../event-bus';
+	import EventBus from '../../event-bus';
 	 export default {
 	 	data() {
 	 		return {
@@ -18,10 +18,11 @@
         		var dato = $('#buscar').val()
         		let me = this;
     			axios.get('http://beta.test/productos',{
-        			buscar: dato,
+        			params:{
+                        buscar: dato,
+                    }
     			}).then(function(response){
-        			console.log(me.buscar)
-        			//EventBus.$emit('producto-added',response.data.productos)
+                    EventBus.$emit('producto-search',response.data)
     			}).catch(function(error){
     				console.log(error)
     			});

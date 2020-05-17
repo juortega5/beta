@@ -18,13 +18,13 @@ class ProductosController extends Controller
     {
         if ($request->ajax()) 
         {
-            if($request->input('buscar'))
+            if($request->input('buscar') && $request->input('buscar')<>"null")
             {
-                $productos = Producto::buscarProducto($request->input('buscar'))->paginate(1);
+                $productos = Producto::buscarProducto($request->input('buscar'))->paginate(2);
             }
             else
             {
-                $productos = Producto::with('tipoUnidad')->paginate(3);
+                $productos = Producto::with('tipoUnidad')->paginate(2);
             }
             $selectUnidades = Producto::selectUnidades();
             $data = ["productos"=>$productos,"unidades"=> $selectUnidades,"buscar"=>$request->input('buscar')];

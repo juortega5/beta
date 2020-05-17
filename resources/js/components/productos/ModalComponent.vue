@@ -12,8 +12,9 @@
 	        <form  @submit.prevent="saveProducto"   class="form-group" id="formProductos" autocomplete="off">
 				<div class="form-group">
 					<label for="nombreProducto">Producto</label>
-					<input v-model="nombre_producto" type="text" class="form-control" id="nombreProducto" aria-describedby="nombreHelp" placeholder="Producto">
+					<input v-model="nombre_producto" type="text" class="form-control" id="nombreProducto" aria-describedby="nombreHelp" placeholder="Producto" onKeyPress="return soloLetrasNumeros(event)">
 					<small id="nombreHelp" class="form-text text-muted">Ingrese el nombre del producto.</small>
+					<small id="nombreError" class="form-text text-danger">{{ error.nombre_producto }}</small>
 				</div>
 				<div class="form-group">
 					<label for="unidad">Tipo de unidad</label>
@@ -22,11 +23,13 @@
 						<option v-for="(unidad,key) in unidades" :value="key">{{ unidad }}</option>
 					</select>
 					<small id="unidadHelp" class="form-text text-muted">Indique si el producto se mide por UND o Kg.</small>
+					<small id="unidadError" class="form-text text-danger">{{ error.id_unidades }}</small>
 				</div>
 				<div class="form-group">
 					<label for="precio">Precio</label>
-					<input v-model="precio_venta" type="text" class="form-control" id="precio" aria-describedby="precioHelp" placeholder="Precio">
+					<input v-model="precio_venta" type="text" class="form-control" id="precio" aria-describedby="precioHelp" placeholder="Precio" onKeyPress="return soloNumeros(event)">
 					<small id="precioHelp" class="form-text text-muted">Ingrese el precio de venta del producto por UND o Kg.</small>
+					<small id="precioError" class="form-text text-danger">{{ error.precio_venta }}</small>
 				</div>
 				<div class="form-group" align="center">
 					<button type="submit" class="btn btn-success">Guardar</button> 
@@ -39,7 +42,7 @@
 	</div>
 </template>
 <script>
-	import EventBus from '../event-bus';
+	import EventBus from '../../event-bus';
 	 export default {
 	 	data() {
 	 		return {
@@ -49,7 +52,12 @@
 	 			slug : null,
 	 			titulo : "Nuevo Producto",
 	 			update : 0,
-	 			unidades: {}
+	 			unidades: {},
+	 			error: {
+	 				nombre_producto: null,
+	 				id_unidades: null,
+	 				precio_venta: null
+	 			}
 	 		}
 	 	},
         mounted() {
@@ -63,6 +71,23 @@
 	 			this.titulo = "Editar Producto";
 			});
         },
+        created(){
+			EventBus.$on('producto-error', data => {
+				this.error = {}
+				if(data.errors.nombre_producto)
+				{
+					this.error.nombre_producto = data.errors.nombre_producto
+				}
+				if (data.errors.id_unidades) 
+				{
+					this.error.id_unidades = data.errors.id_unidades
+				}
+				if (data.errors.precio_venta) 
+				{
+					this.error.precio_venta = data.errors.precio_venta
+				}
+			});
+		},
         methods: {
         	saveProducto: function(){
         		let metodo = this;
@@ -76,6 +101,7 @@
 	        			EventBus.$emit('producto-added',response.data.productos)
 						metodo.reset();
         			}).catch(function(error){
+        				EventBus.$emit('producto-error',error.response.data)
         				console.log(error)
         			});
         		}
@@ -90,6 +116,7 @@
         				EventBus.$emit('producto-update',response.data.productos)
 						metodo.reset();
         			}).catch(function(error){
+        				EventBus.$emit('producto-error',error.response.data)
         				console.log(error)
         			});
         		}
@@ -101,10 +128,12 @@
 	 			this.slug = "";
 	 			this.titulo = "Nuevo Producto";
 	 			this.update = 0;
+	 			this.error = {};
 	 			$('#crearProducto').modal('hide');
     			$(document.body).removeClass('modal-open');
 				$('.modal-backdrop').remove();
-        	}
+        	},
+
         }
     }
 </script>

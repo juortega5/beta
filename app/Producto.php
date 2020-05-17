@@ -43,6 +43,6 @@ class Producto extends Model
 
     public static function buscarProducto($producto)
     {
-        return static::where('nombre_producto','LIKE',"%$producto%");
+        return static::where('nombre_producto','LIKE',"%$producto%")->with('tipoUnidad');
     }
 }
