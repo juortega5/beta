@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\prm_unidad;
+use App\Prm_unidades;
 
-class Producto extends Model
+class Productos extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -25,14 +25,24 @@ class Producto extends Model
 	    return 'slug';
 	} 
 
+    /**
+     * Relación entre productos y tipo de unidades.
+     *
+     * @return relacion
+     */
     public function tipoUnidad()
     {
-    	return $this->belongsTo('App\prm_unidad','id_unidades');
+    	return $this->belongsTo('App\Prm_unidades','id_unidades');
     }
 
+    /**
+     * Crea un arreglo con los tipos de unidades.
+     *
+     * @return array
+     */
     public static function selectUnidades()
     {
-    	$prm_unidades = prm_unidad::all();
+    	$prm_unidades = Prm_unidades::all();
         $select = [];
         foreach($prm_unidades as $prm_unidades)
         {
@@ -41,6 +51,12 @@ class Producto extends Model
         return $select;
     }
 
+    /**
+     * Busca coincidencias de productos con el string ingresado.
+     *
+     * @param  string  $producto
+     * @return colección con las coincidencias
+     */
     public static function buscarProducto($producto)
     {
         return static::where('nombre_producto','LIKE',"%$producto%")->with('tipoUnidad');

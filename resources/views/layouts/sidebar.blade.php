@@ -10,6 +10,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{{route('productos.index') }}">Productos</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('terceros.index') }}">Terceros</a>
+      </li>
        <li class="nav-item">
         <a class="nav-link" href="#">Compras</a>
       </li>

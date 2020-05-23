@@ -20,7 +20,7 @@ class CreateProductosTable extends Migration
             $table->integer('id_unidades')->unsigned();
             $table->integer('precio_venta');
             $table->timestamps();            
-            $table->foreign('id_unidades')->references('id')->on('prm_unidads')
+            $table->foreign('id_unidades')->references('id')->on('prm_unidades')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
