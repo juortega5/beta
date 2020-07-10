@@ -77,12 +77,14 @@ class TercerosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $nit
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nit)
     {
-        //
+        $terceros = Terceros::obtenerTercero($nit);
+        $data = ["terceros"=>$terceros];
+        return response()->json($data,200);
     }
 
     /**

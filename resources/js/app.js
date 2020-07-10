@@ -35,6 +35,15 @@ Vue.component('modalterceros-component', require('./components/terceros/ModalCom
 Vue.component('modaldeleteterceros-component', require('./components/terceros/ModalDeleteComponent.vue').default);
 Vue.component('buscarterceros-component', require('./components/terceros/BuscarComponent.vue').default);
 /**
+ *Funcionalidades axios para las compras.
+*/
+Vue.component('tablacompras-component', require('./components/compras/TablaComponent.vue').default);
+Vue.component('modalcompras-component', require('./components/compras/ModalComponent.vue').default);
+Vue.component('modaldeletecompras-component', require('./components/compras/ModalDeleteComponent.vue').default);
+Vue.component('buscarcompras-component', require('./components/compras/BuscarComponent.vue').default);
+Vue.component('auxiliarterceros-component', require('./components/compras/TercerosAuxiliarComponent.vue').default);
+Vue.component('addproductos-component', require('./components/compras/ProductosAddComponent.vue').default);
+/**
  *Paginación general.
 */
 Vue.component('pagination', require('laravel-vue-pagination'));

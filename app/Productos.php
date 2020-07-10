@@ -13,7 +13,7 @@ class Productos extends Model
      *
      * @var array
      */
-	protected $fillable = ['nombre_producto','id_unidades','slug','precio_venta'];
+	protected $fillable = ['nombre_producto','codigo','id_unidades','slug','precio_venta'];
 
     /**
      * Get the route key for the model.
@@ -60,5 +60,16 @@ class Productos extends Model
     public static function buscarProducto($producto)
     {
         return static::where('nombre_producto','LIKE',"%$producto%")->with('tipoUnidad');
+    }
+
+    /**
+     * Busca los datos del producto con el codigo ingresado.
+     *
+     * @param  string  $codigo
+     * @return colección con los resultados
+    */
+    public static function obtenerProducto($codigo)
+    {
+        return static::where('codigo',$codigo)->first();
     }
 }

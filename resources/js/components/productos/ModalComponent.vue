@@ -11,6 +11,12 @@
 	      <div class="modal-body">
 	        <form  @submit.prevent="saveProducto"   class="form-group" id="formProductos" autocomplete="off">
 				<div class="form-group">
+					<label for="codigo">Codigo</label>
+					<input v-model="codigo" type="text" class="form-control" id="codigo" aria-describedby="codigoHelp">
+					<small id="codigoHelp" class="form-text text-muted">Ingrese el codigo de barras.</small>
+					<small id="codigoError" class="form-text text-danger">{{ error.codigo }}</small>
+				</div>
+				<div class="form-group">
 					<label for="nombreProducto">Producto</label>
 					<input v-model="nombre_producto" type="text" class="form-control" id="nombreProducto" aria-describedby="nombreHelp" placeholder="Producto" onKeyPress="return soloLetrasNumeros(event)">
 					<small id="nombreHelp" class="form-text text-muted">Ingrese el nombre del producto.</small>
@@ -43,30 +49,34 @@
 </template>
 <script>
 	import EventBus from '../../event-bus';
-	 export default {
+	export default {
 	 	data() {
 	 		return {
 	 			nombre_producto: null,
 	 			id_unidades: "",
 	 			precio_venta: null,
 	 			slug : null,
+	 			codigo: null,
 	 			titulo : "Nuevo Producto",
 	 			update : 0,
 	 			unidades: {},
 	 			error: {
 	 				nombre_producto: null,
 	 				id_unidades: null,
-	 				precio_venta: null
+	 				precio_venta: null,
+	 				codigo: null
 	 			}
 	 		}
 	 	},
         mounted() {
-            axios.get('http://beta.test/productos').then(response => { 	this.unidades =  response.data.unidades })
+        	$(function(){ $('#crearProducto').on('shown.bs.modal', function (){ $('#codigo').focus(); }); });  
+        	axios.get('http://beta.test/productos').then(response => { 	this.unidades =  response.data.unidades })
             EventBus.$on('producto-edit', data => {
 				this.nombre_producto = data.nombre_producto;
 				this.id_unidades = data.id_unidades;
 	 			this.precio_venta = data.precio_venta;
 	 			this.slug = data.slug;
+	 			this.codigo = data.codigo;
 	 			this.update = 1;
 	 			this.titulo = "Editar Producto";
 			});
@@ -86,6 +96,10 @@
 				{
 					this.error.precio_venta = data.errors.precio_venta
 				}
+				if (data.errors.codigo) 
+				{
+					this.error.codigo = data.errors.codigo
+				}
 			});
 		},
         methods: {
@@ -96,7 +110,8 @@
         			axios.post('http://beta.test/productos',{
 	        			nombre_producto: this.nombre_producto,
 		 				id_unidades: this.id_unidades,
-		 				precio_venta: this.precio_venta
+		 				precio_venta: this.precio_venta,
+		 				codigo: this.codigo,
         			}).then(function(response){
 	        			EventBus.$emit('producto-added',response.data.productos)
 						metodo.reset();
@@ -111,6 +126,7 @@
 	        			nombre_producto: this.nombre_producto,
 		 				id_unidades: this.id_unidades,
 		 				precio_venta: this.precio_venta,
+		 				codigo: this.codigo,
 		 				slug: this.slug,
         			}).then(function(response){
         				EventBus.$emit('producto-update',response.data.productos)
@@ -125,6 +141,7 @@
         		this.nombre_producto = "" ;
 				this.id_unidades = "";
 	 			this.precio_venta = "";
+	 			this.codigo = "";
 	 			this.slug = "";
 	 			this.titulo = "Nuevo Producto";
 	 			this.update = 0;
@@ -133,7 +150,8 @@
     			$(document.body).removeClass('modal-open');
 				$('.modal-backdrop').remove();
         	},
-
-        }
+        	
+        },
+       
     }
 </script>

@@ -14,7 +14,7 @@
         <a class="nav-link" href="{{route('terceros.index') }}">Terceros</a>
       </li>
        <li class="nav-item">
-        <a class="nav-link" href="#">Compras</a>
+        <a class="nav-link" href="{{route('compras.index') }}">Compras</a>
       </li>
        <li class="nav-item">
         <a class="nav-link" href="#">Ventas</a>

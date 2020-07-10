@@ -5,14 +5,12 @@
 </template>
 <script>
 	import EventBus from '../../event-bus';
-	 export default {
+	export default {
 	 	data() {
 	 		return {
 	 			buscar: null,
 	 		}
 	 	},
-        mounted() {
-        },
         methods: {
         	searchProducto: function(e){
         		var dato = $('#buscar').val()

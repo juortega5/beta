@@ -53,9 +53,10 @@ class ProductosController extends Controller
     {
         if ($request->ajax()) 
         {
-            $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
+            $validateData = $request->validate(['nombre_producto'=> ['unique:productos'], 'codigo'=> ['unique:productos']]);
             $producto = new Productos();
             $producto->nombre_producto = $request->input('nombre_producto');
+            $producto->codigo = $request->input('codigo');
             $producto->slug = Str::of($request->input('nombre_producto'))->slug('-');
             $producto->id_unidades = $request->input('id_unidades');
             $producto->precio_venta = $request->input('precio_venta');
@@ -68,12 +69,14 @@ class ProductosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $codigo
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($codigo)
     {
-        
+        $productos = Productos::obtenerProducto($codigo);
+        $data = ["productos"=>$productos];
+        return response()->json($data,200);
     }
 
     /**
@@ -99,10 +102,15 @@ class ProductosController extends Controller
         if ($request->ajax()) 
         {
             $comparar = Str::of($request->input('nombre_producto'))->slug('-');
-            if ($comparar == $producto->slug || !Productos::where('slug', $comparar)->exists()) 
+            $comparaCodigo = $request->input('codigo');
+            if ( Productos::where('codigo', $comparaCodigo,'AND')->where('slug', $producto->slug)->exists() && $comparar == $producto->slug || 
+                $comparar == $producto->slug && !Productos::where('codigo', $comparaCodigo)->exists() || 
+                !Productos::where('slug', $comparar)->exists() && Productos::where('codigo', $comparaCodigo,'AND')->where('slug', $producto->slug)->exists() || 
+                !Productos::where('slug', $comparar)->exists() && !Productos::where('codigo', $comparaCodigo)->exists() ) 
             {
                 $producto->slug = $comparar;
                 $producto->nombre_producto = $request->input('nombre_producto');
+                $producto->codigo = $request->input('codigo');
                 $producto->id_unidades = $request->input('id_unidades');
                 $producto->precio_venta = $request->input('precio_venta');
                 $producto->save();
@@ -111,7 +119,19 @@ class ProductosController extends Controller
             }
             else
             {
-                $validateData = $request->validate(['nombre_producto'=> 'unique:productos']);
+                switch (true) {
+                    case Productos::where('codigo', $comparaCodigo)->exists() && $comparar == $producto->slug:
+                       $validateData = $request->validate(['codigo'=> ['unique:productos']]);
+                    break;
+
+                    case Productos::where('slug',  $comparar)->exists() && Productos::where('codigo', $comparaCodigo,'AND')->where('slug', $producto->slug)->exists():
+                       $validateData = $request->validate(['nombre_producto'=> ['unique:productos']]);
+                    break;
+                    
+                    default:
+                       $validateData = $request->validate(['nombre_producto'=> ['unique:productos'],'codigo'=> ['unique:productos']]);
+                    break;
+                }
             }
         }
     }

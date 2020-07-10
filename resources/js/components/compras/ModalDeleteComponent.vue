@@ -21,7 +21,7 @@
 </template>
 <script>
 	import EventBus from '../../event-bus';
-	export default {
+	 export default {
 	 	data() {
 	 		return {
 	 			nombre_producto: null,

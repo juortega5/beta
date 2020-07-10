@@ -61,4 +61,16 @@ class Terceros extends Model
     {
         return static::where('nombre_tercero','LIKE',"%$tercero%")->with('roles');
     }
+
+
+    /**
+     * Busca los datos del tercero con el nit ingresado.
+     *
+     * @param  string  $nit
+     * @return colección con los resultados
+     */
+    public static function obtenerTercero($nit)
+    {
+        return static::where('nit',$nit)->first();
+    }
 }
