@@ -2273,27 +2273,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      filas: 0
+      ocultar: false
     };
   },
   mounted: function mounted() {
-    $('#codigo0').focus();
+    $('#0').focus();
   },
   created: function created() {},
   methods: {
     addfila: function addfila() {
-      var filaNueva = '<tr>' + '<td><input type="text" name="a" ></td>' + '<td><input type="text" name="a" ></td>' + '<td><input type="text" name="b"></td>' + '<td><input type="text" name="c" v-on:keyup.enter="addfila()"></td>' + '<td><input type="text" name="d"></td>' + '</tr>';
-      $('#tablaDetalle tbody').append(filaNueva);
+      var complementoId = $(".codigos").length;
+      var filaNueva = '\
+				<tr align="center">\
+					<td><input class="form-control bg-dark text-white border-dark" v-on:keydown.tab="searchProductos()" id="' + complementoId + '" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" id="nombre0" type="text"></td>\
+					<td><input  class="form-control bg-dark text-white border-dark" id="111" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" id="precio1"  type="text"></td>\
+					<td><button class="button"></button></td>\
+				</tr>\
+				';
+      $('#tablaDetalle tbody').append(filaNueva); //Hace una pausa para que el focus no salte al siguiente input.			
+
+      setTimeout(function () {
+        $('#' + complementoId).focus();
+      }, 1);
     },
-    searchProductos: function searchProductos(e) {
-      var dato = $('#codigo0').val();
+    searchProductos: function searchProductos() {
+      var id = event.target.id;
+      var dato = event.target.value;
       var me = this;
       axios.get('http://beta.test/productos/' + dato).then(function (response) {
-        $('#codigo1').val(response.data.productos.nombre_producto);
+        if (response.data.productos == null) {
+          me.ocultar = true;
+        } else {
+          $('#nombre' + id).val(response.data.productos.nombre_producto);
+        }
       })["catch"](function (error) {
         console.log(error);
       });
@@ -40641,46 +40664,76 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "col-md-12", attrs: { align: "center" } }, [
-    _c(
-      "table",
-      {
-        staticClass: "table table-dark table-hover table-bordered table-sm",
-        attrs: { id: "tablaDetalle" }
-      },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("tbody", [
-          _c("tr", { attrs: { align: "center" } }, [
-            _c("td", [
-              _c("input", {
-                staticClass: "form-control bg-dark text-white border-dark",
-                attrs: { id: "codigo0", type: "text", name: "a" },
-                on: {
-                  keydown: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "tab", 9, $event.key, "Tab")
-                    ) {
-                      return null
+    _vm.ocultar == false
+      ? _c(
+          "table",
+          {
+            staticClass: "table table-dark table-hover table-bordered table-sm",
+            attrs: { id: "tablaDetalle" }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("tbody", [
+              _c("tr", { attrs: { align: "center" } }, [
+                _c("td", [
+                  _c("input", {
+                    staticClass:
+                      "codigos form-control bg-dark text-white border-dark",
+                    attrs: { id: "0", type: "text" },
+                    on: {
+                      keydown: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k($event.keyCode, "tab", 9, $event.key, "Tab")
+                        ) {
+                          return null
+                        }
+                        return _vm.searchProductos()
+                      }
                     }
-                    return _vm.searchProductos()
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _vm._m(2),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _vm._m(4)
-          ])
+                  })
+                ]),
+                _vm._v(" "),
+                _vm._m(1),
+                _vm._v(" "),
+                _vm._m(2),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    staticClass: "form-control bg-dark text-white border-dark",
+                    attrs: { id: "precio0", type: "text" },
+                    on: {
+                      keydown: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k($event.keyCode, "tab", 9, $event.key, "Tab")
+                        ) {
+                          return null
+                        }
+                        return _vm.addfila()
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _vm._m(3)
+              ])
+            ])
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.ocultar == true
+      ? _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-md-12" },
+            [_c("auxiliarterceros-component", { attrs: { nit: _vm.nit } })],
+            1
+          )
         ])
-      ]
-    )
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -40713,7 +40766,7 @@ var staticRenderFns = [
     return _c("td", [
       _c("input", {
         staticClass: "form-control bg-dark text-white border-dark",
-        attrs: { id: "codigo1", type: "text", name: "a" }
+        attrs: { id: "nombre0", type: "text" }
       })
     ])
   },
@@ -40724,7 +40777,7 @@ var staticRenderFns = [
     return _c("td", [
       _c("input", {
         staticClass: "form-control bg-dark text-white border-dark",
-        attrs: { type: "text", name: "b" }
+        attrs: { id: "cantidad0", type: "text" }
       })
     ])
   },
@@ -40732,23 +40785,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("input", {
-        staticClass: "form-control bg-dark text-white border-dark",
-        attrs: { type: "text", name: "c" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("input", {
-        staticClass: "form-control bg-dark text-white border-dark",
-        attrs: { type: "text", name: "d" }
-      })
-    ])
+    return _c("td", [_c("button", { staticClass: "button" })])
   }
 ]
 render._withStripped = true

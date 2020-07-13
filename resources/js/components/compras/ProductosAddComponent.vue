@@ -1,6 +1,6 @@
 <template>
 	<div align="center" class="col-md-12">
-		<table id="tablaDetalle" class="table table-dark table-hover table-bordered table-sm">
+		<table v-if="ocultar==false" id="tablaDetalle" class="table table-dark table-hover table-bordered table-sm">
 			<thead>
 				<tr align="center">
 					<th colspan="5">Detalle de productos</th>
@@ -15,14 +15,19 @@
 			</thead>
 			<tbody>
 				<tr align="center">
-					<td><input class="form-control bg-dark text-white border-dark"  id="codigo0" v-on:keydown.tab="searchProductos()" type="text" name="a" ></td>
-					<td><input  class="form-control bg-dark text-white border-dark" id="codigo1" type="text" name="a" ></td>
-					<td><input  class="form-control bg-dark text-white border-dark" type="text" name="b"></td>
-					<td><input  class="form-control bg-dark text-white border-dark" type="text" name="c" ></td>
-					<td><input  class="form-control bg-dark text-white border-dark" type="text" name="d"></td>
+					<td><input class="codigos form-control bg-dark text-white border-dark" id="0" v-on:keydown.tab="searchProductos()" type="text"></td>
+					<td><input class="form-control bg-dark text-white border-dark" id="nombre0" type="text"></td>
+					<td><input class="form-control bg-dark text-white border-dark" id="cantidad0" type="text"></td>
+					<td><input class="form-control bg-dark text-white border-dark" id="precio0" v-on:keydown.tab="addfila()" type="text"></td>
+					<td><button class="button"></button></td>
 				</tr>
 			</tbody>
 		</table>
+		<div v-if="ocultar==true"  class="row">
+  			<div  class="col-md-12">
+  				<auxiliarterceros-component :nit="nit"></auxiliarterceros-component>
+  			</div>
+  		</div>
 	</div>
 </template>
 <script>
@@ -30,40 +35,47 @@
 	 export default {
 	 	data() {
 	 		return {
-	 			filas:0,
+	 			ocultar:false,
 	 			
 	 		}
 	 	},
         mounted() {
-        	$('#codigo0').focus();
+        	$('#0').focus();
         },
         created(){
 			
 		},
         methods: {
         	addfila: function(){
-
-			let filaNueva = 
-				'<tr>'+
-					'<td><input type="text" name="a" ></td>'+
-					'<td><input type="text" name="a" ></td>'+
-					'<td><input type="text" name="b"></td>'+
-					'<td><input type="text" name="c" v-on:keyup.enter="addfila()"></td>'+
-					'<td><input type="text" name="d"></td>'+
-				'</tr>';
-
-			$('#tablaDetalle tbody').append(filaNueva);
-        		
+        		var complementoId = ($(".codigos").length);
+				let filaNueva = 
+				'\
+				<tr align="center">\
+					<td><input class="form-control bg-dark text-white border-dark" v-on:keydown.tab="searchProductos()" id="'+complementoId +'" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" id="nombre0" type="text"></td>\
+					<td><input  class="form-control bg-dark text-white border-dark" id="111" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" id="precio1"  type="text"></td>\
+					<td><button class="button"></button></td>\
+				</tr>\
+				';
+				$('#tablaDetalle tbody').append(filaNueva);	
+				//Hace una pausa para que el focus no salte al siguiente input.			
+				setTimeout(function(){ $('#'+complementoId).focus(); }, 1);
         	},
-        	searchProductos: function(e){
-        		var dato = $('#codigo0').val()
+        	searchProductos: function(){
+        		var id = event.target.id;
+        		var dato = event.target.value;
         		let me = this;
     			axios.get('http://beta.test/productos/'+dato
     			).then(function(response){
-    				
-    				$('#codigo1').val(response.data.productos.nombre_producto)
-    					
-    			
+    				if (response.data.productos == null) 
+    				{
+    					me.ocultar = true;
+    				}
+    				else
+    				{
+    					$('#nombre'+id).val(response.data.productos.nombre_producto)	
+    				}
     			}).catch(function(error){
     				console.log(error)
     			});
