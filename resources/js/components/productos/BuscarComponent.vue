@@ -12,14 +12,15 @@
 	 		}
 	 	},
         methods: {
+            //Envia los datos al controlador para buscar un registro.
         	searchProducto: function(e){
         		var dato = $('#buscar').val()
-        		let me = this;
     			axios.get('http://beta.test/productos',{
         			params:{
                         buscar: dato,
                     }
     			}).then(function(response){
+                    //Evento para hacer la actualizacion de registros al buscar.
                     EventBus.$emit('producto-search',response.data)
     			}).catch(function(error){
     				console.log(error)

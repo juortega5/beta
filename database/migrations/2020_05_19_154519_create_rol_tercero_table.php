@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolesTercerosTable extends Migration
+class CreateRolTerceroTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateRolesTercerosTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles_terceros', function (Blueprint $table) {
+        Schema::create('rol_tercero', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_rol')->unsigned();
-            $table->integer('id_tercero')->unsigned();
-            $table->foreign('id_rol')->references('id')->on('prm_roles')
+            $table->integer('rol_id')->unsigned();
+            $table->integer('tercero_id')->unsigned();
+            $table->foreign('rol_id')->references('id')->on('roles')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $table->foreign('id_tercero')->references('id')->on('terceros')
+            $table->foreign('tercero_id')->references('id')->on('terceros')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->timestamps();
@@ -34,6 +34,6 @@ class CreateRolesTercerosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles_terceros');
+        Schema::dropIfExists('rol_tercero');
     }
 }

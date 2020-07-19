@@ -4,17 +4,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Prm_unidades;
+use App\Unidad;
 
-class Productos extends Model
+class Producto extends Model
 {
+
+    protected $table = "productos";
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-	protected $fillable = ['nombre_producto','codigo','id_unidades','slug','precio_venta'];
-
+	protected $fillable = ['nombre_producto','codigo','unidad_id','slug','precio_venta'];
+    
     /**
      * Get the route key for the model.
      *
@@ -30,9 +33,9 @@ class Productos extends Model
      *
      * @return relacion
      */
-    public function tipoUnidad()
+    public function unidad()
     {
-    	return $this->belongsTo('App\Prm_unidades','id_unidades');
+    	return $this->belongsTo('App\Unidad','unidad_id');
     }
 
     /**
@@ -40,15 +43,15 @@ class Productos extends Model
      *
      * @return array
      */
-    public static function selectUnidades()
+    public static function getUnidades()
     {
-    	$prm_unidades = Prm_unidades::all();
-        $select = [];
-        foreach($prm_unidades as $prm_unidades)
+    	$objUnidades = Unidad::all();
+        $arreglo = [];
+        foreach($objUnidades as $objUnidades)
         {
-            $select[$prm_unidades->id] = $prm_unidades->unidad;
+            $arreglo[$objUnidades->id] = $objUnidades->unidad;
         }
-        return $select;
+        return $arreglo;
     }
 
     /**
@@ -57,9 +60,9 @@ class Productos extends Model
      * @param  string  $producto
      * @return colección con las coincidencias
      */
-    public static function buscarProducto($producto)
+    public static function getAllProductos($producto)
     {
-        return static::where('nombre_producto','LIKE',"%$producto%")->with('tipoUnidad');
+        return static::where('nombre_producto','LIKE',"%$producto%")->with('unidad');
     }
 
     /**
@@ -68,7 +71,7 @@ class Productos extends Model
      * @param  string  $codigo
      * @return colección con los resultados
     */
-    public static function obtenerProducto($codigo)
+    public static function getProducto($codigo)
     {
         return static::where('codigo',$codigo)->first();
     }

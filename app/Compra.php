@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Prm_roles extends Model
+class Compra extends Model
 {
-    
+    protected $table = "compras";
 }

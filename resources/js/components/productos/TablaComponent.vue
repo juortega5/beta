@@ -21,7 +21,7 @@
 				<tbody>
 					<tr v-for="producto in productos">
 						<td>{{ producto.nombre_producto }}</td>
-						<td align="center">{{ producto.tipo_unidad.unidad }}</td>      
+						<td align="center">{{ producto.unidad.unidad }}</td>      
 						<td align="center">{{ producto.precio_venta }}</td>
 						<td align="center">
 							<button type="button" @click="editProductos(producto)" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
@@ -43,10 +43,6 @@
 	.pagination { justify-content: center!important; } 
 </style>
 <script>
-		$('#crearProducto').on('show', function () {
-   $('#codigo').focus();
-
-})
 	import EventBus from '../../event-bus';
 	export default {
 		data(){
@@ -60,13 +56,16 @@
 			this.getResults();
 		},
 		created(){
+			//Al crear un registro actualiza la tabla.
 			EventBus.$on('producto-added', data => {
 				this.productos.push(data)
 				this.getResults()
 			});
+			//Al eliminar un registro actualiza la tabla.
 			EventBus.$on('producto-destroy', data => {
 				this.getResults()
 			});
+			//Al buscar un registro actualiza la tabla dependiendo de la busqueda.
 			EventBus.$on('producto-search', data => {
 				this.productos = data.productos.data
 				this.paginacion = data.productos 
@@ -74,20 +73,24 @@
 			});
 		},
 		updated(){
+			//Al editar un registro actualiza la tabla.
 			EventBus.$on('producto-update', data => {
 				this.getResults()
 			});
 		},
 		methods: {
+			//Obtiene los productos y realiza la paginación.
 			getResults(page = 1) {
 					axios.get('http://beta.test/productos?page=' +page+ '&buscar='+this.buscar).then(response => { 
 					this.productos = response.data.productos.data
 					this.paginacion = response.data.productos; 
 				});
 			},
+			//Genera el evento para enviar datos a la Modal y editar.
 			editProductos(data){
 				EventBus.$emit('producto-edit',data)
 			},
+			//Genera el evento para enviar datos a la ModalDelete y eliminar.
 			deleteProductos(data){
 				EventBus.$emit('producto-delete',data)
 			}

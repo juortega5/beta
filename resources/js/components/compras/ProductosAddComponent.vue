@@ -18,14 +18,14 @@
 					<td><input class="codigos form-control bg-dark text-white border-dark" id="0" v-on:keydown.tab="searchProductos()" type="text"></td>
 					<td><input class="form-control bg-dark text-white border-dark" id="nombre0" type="text"></td>
 					<td><input class="form-control bg-dark text-white border-dark" id="cantidad0" type="text"></td>
-					<td><input class="form-control bg-dark text-white border-dark" id="precio0" v-on:keydown.tab="addfila()" type="text"></td>
-					<td><button class="button"></button></td>
+					<td><input class="form-control bg-dark text-white border-dark" id="precio0" v-on:keydown.enter="addfila()" type="text"></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
-		<div v-if="ocultar==true"  class="row">
+		<div class="row">
   			<div  class="col-md-12">
-  				<auxiliarterceros-component :nit="nit"></auxiliarterceros-component>
+  				<modalproducto-component></modalproducto-component>
   			</div>
   		</div>
 	</div>
@@ -36,7 +36,7 @@
 	 	data() {
 	 		return {
 	 			ocultar:false,
-	 			
+	 			productos:{},
 	 		}
 	 	},
         mounted() {
@@ -47,14 +47,13 @@
 		},
         methods: {
         	addfila: function(){
-        		var complementoId = ($(".codigos").length);
 				let filaNueva = 
 				'\
 				<tr align="center">\
-					<td><input class="form-control bg-dark text-white border-dark" v-on:keydown.tab="searchProductos()" id="'+complementoId +'" type="text"></td>\
-					<td><input class="form-control bg-dark text-white border-dark" id="nombre0" type="text"></td>\
-					<td><input  class="form-control bg-dark text-white border-dark" id="111" type="text"></td>\
-					<td><input class="form-control bg-dark text-white border-dark" id="precio1"  type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" type="text"></td>\
+					<td><input class="form-control bg-dark text-white border-dark" type="text"></td>\
 					<td><button class="button"></button></td>\
 				</tr>\
 				';
@@ -70,7 +69,7 @@
     			).then(function(response){
     				if (response.data.productos == null) 
     				{
-    					me.ocultar = true;
+    					$('#crearProducto').modal('show'); 
     				}
     				else
     				{

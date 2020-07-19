@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Beta - @yield('title')</title>
+	<title>Beta</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-	@yield('sidebar',View::make('layouts.sidebar'))
-	<div id="app" class="container-fluid">
-		<nav aria-label="breadcrumb">
-  			<ol class="breadcrumb">
-   				<li class="breadcrumb-item active" aria-current="page"><a href="/">Home</a></li>
-   				@yield('route')
- 			</ol>
-		</nav>
-		@yield('content')
+	<div id="app">
+		<sidebar-component></sidebar-component>
+		<div class="container-fluid">
+			<router-view></router-view>
+		</div>
 	</div>
 	<script src="{{asset('js/app.js')}}"></script>
 	<script src="{{ asset('js/validation.js') }}"></script>

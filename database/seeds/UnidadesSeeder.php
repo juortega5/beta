@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class prm_unidadesSeeder extends Seeder
+class UnidadesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class prm_unidadesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('prm_unidades')->insert([
+        DB::table('unidades')->insert([
 			[
 				'unidad' => 'Und',
 				'slug' => 'Und',

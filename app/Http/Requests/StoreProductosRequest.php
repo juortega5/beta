@@ -25,7 +25,7 @@ class StoreProductosRequest extends FormRequest
     {
         return [
             'nombre_producto'=> 'required|max:100|min:3|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'id_unidades'=> 'required|in:1,2',
+            'unidad_id'=> 'required|in:1,2',
             'precio_venta'=> 'required|numeric|max:99999999999',
             'codigo'=> 'required|max:100|min:3|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/'
         ];

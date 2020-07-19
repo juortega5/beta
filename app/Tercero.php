@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\prm_roles;
+use App\Rol;
 
-class Terceros extends Model
+class Tercero extends Model
 {
+
+    protected $table = "terceros";
     /**
      * The attributes that are mass assignable.
      *
@@ -32,7 +34,7 @@ class Terceros extends Model
      */
     public function roles()
     {
-        return $this->belongsToMany('App\Prm_roles','roles_terceros','id_tercero','id_rol');
+        return $this->belongsToMany('App\Rol','rol_tercero','tercero_id','rol_id');
     }
 
     /**
@@ -40,15 +42,15 @@ class Terceros extends Model
      *
      * @return array
      */
-    public static function listaRoles()
+    public static function getRoles()
     {
-    	$prm_roles = prm_roles::all();
-        $lista = [];
-        foreach($prm_roles as $prm_roles)
+    	$objRol = Rol::all();
+        $arreglo = [];
+        foreach($objRol as $objRol)
         {
-            $lista[$prm_roles->id] = $prm_roles->rol;
+            $arreglo[$objRol->id] = $objRol->rol;
         }
-        return $lista;
+        return $arreglo;
     }
 
     /**
@@ -57,7 +59,7 @@ class Terceros extends Model
      * @param  string  $tercero
      * @return colección con las coincidencias
      */
-    public static function buscarTercero($tercero)
+    public static function getAllTercero($tercero)
     {
         return static::where('nombre_tercero','LIKE',"%$tercero%")->with('roles');
     }
@@ -69,7 +71,7 @@ class Terceros extends Model
      * @param  string  $nit
      * @return colección con los resultados
      */
-    public static function obtenerTercero($nit)
+    public static function getTercero($nit)
     {
         return static::where('nit',$nit)->first();
     }

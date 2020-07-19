@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePrmUnidadesTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePrmUnidadesTable extends Migration
      */
     public function up()
     {
-        Schema::create('prm_unidades', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('unidad',100);
+            $table->string('rol',100);
             $table->string('slug',100)->unique();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreatePrmUnidadesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prm_unidades');
+        Schema::dropIfExists('roles');
     }
 }

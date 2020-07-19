@@ -4,8 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Prm_unidades extends Model
+class Unidad extends Model
 {
+	protected $table = "unidades";
+
 	/**
      * Relación entre productos y tipo de unidades.
      *
@@ -13,6 +15,6 @@ class Prm_unidades extends Model
      */
     public function productos()
 	{
-		return $this->hasMany('App\Productos');
+		return $this->hasMany('App\Producto');
 	}
 }

@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('layouts.app');
 });
 
-Route::resource('productos','ProductosController');
-Route::resource('terceros','TercerosController');
-Route::resource('compras','ComprasController');
+Route::resource('productos','ProductoController');
+Route::resource('terceros','TerceroController');
+Route::resource('compras','CompraController');
 

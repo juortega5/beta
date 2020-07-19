@@ -18,10 +18,10 @@ class CreateProductosTable extends Migration
             $table->string('nombre_producto',100);
             $table->string('codigo',100)->unique();
             $table->string('slug',100)->unique();
-            $table->integer('id_unidades')->unsigned();
+            $table->integer('unidad_id')->unsigned();
             $table->integer('precio_venta');
             $table->timestamps();            
-            $table->foreign('id_unidades')->references('id')->on('prm_unidades')
+            $table->foreign('unidad_id')->references('id')->on('unidades')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });

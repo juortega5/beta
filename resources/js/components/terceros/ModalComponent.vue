@@ -56,6 +56,9 @@
 <script>
 	import EventBus from '../../event-bus';
 	export default {
+		props: {
+			nitPrevio: String,
+		},
 	 	data() {
 	 		return {
 				nombre_tercero: null,
@@ -77,7 +80,11 @@
 	 		}
 	 	},
         mounted() {
+        	console.log(this.nitPrevio)
+        	this.nit = this.nitPrevio;
+        	//Carga los datos del select de los roles en la modal.
             axios.get('http://beta.test/terceros').then(response => { 	this.listaRoles =  response.data.listaRoles })
+             //Carga los datos del tercero en la modal cuando se edita.
             EventBus.$on('tercero-edit', data => {
 				this.nombre_tercero = data.nombre_tercero;
 				this.nit = data.nit;
@@ -92,6 +99,7 @@
 			});
         },
         created(){
+        	//Imprime los errores de validación.
 			EventBus.$on('tercero-error', data => {
 				this.error = {}
 				if(data.errors.nombre_tercero)
@@ -117,8 +125,10 @@
 			});
 		},
         methods: {
+        	//Envia los datos al controlador para guardar o editar un registro.
         	saveTercero: function(){
         		let metodo = this;
+        		//Guardar registro.
         		if (this.update==0)
         		{
         			axios.post('http://beta.test/terceros',{
@@ -128,13 +138,16 @@
 						direccion: this.direccion,
 						roles: this.roles
         			}).then(function(response){
+        				//Evento para hacer la actualizacion de registros al crear registros.
 	        			EventBus.$emit('tercero-added',response.data.terceros)
 						metodo.reset();
         			}).catch(function(error){
+        				//Evento para enviar los errores al intentar crear registros.
         				EventBus.$emit('tercero-error',error.response.data)
         				console.log(error)
         			});
         		}
+        		//Editar registro.
         		else
         		{
         			axios.put('http://beta.test/terceros/'+this.slug,{
@@ -145,14 +158,17 @@
 						roles: this.roles,
 		 				slug: this.slug
         			}).then(function(response){
+        				//Evento para hacer la actualizacion de registros al editar registros.
         				EventBus.$emit('tercero-update',response.data.terceros)
 						metodo.reset();
         			}).catch(function(error){
+        				//Evento para enviar los errores al intentar editar registros.
         				EventBus.$emit('tercero-error',error.response.data)
         				console.log(error)
         			});
         		}
         	},
+        	//Limpia la modal.
         	reset: function(){
         		this.nombre_tercero = "" ;
 				this.nit = "";
@@ -165,7 +181,8 @@
 	 			$('input').prop( "checked",false)
 	 			$('#crearTercero').modal('hide');
     			$(document.body).removeClass('modal-open');
-				$('.modal-backdrop').remove();
+    			$('.modal-backdrop').remove();
+
         	},
 
         }

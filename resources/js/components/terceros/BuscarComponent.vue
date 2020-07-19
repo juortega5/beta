@@ -12,6 +12,7 @@
 	 		}
 	 	},
         methods: {
+            //Envia los datos al controlador para buscar un registro.
         	searchTercero: function(e){
         		var dato = $('#buscar').val()
         		let me = this;
@@ -20,6 +21,7 @@
                         buscar: dato,
                     }
     			}).then(function(response){
+                     //Evento para hacer la actualizacion de registros al buscar.
                     EventBus.$emit('tercero-search',response.data)
     			}).catch(function(error){
     				console.log(error)

@@ -20,6 +20,7 @@ Vue.use(require('vue-resource'));
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('sidebar-component', require('./components/layouts/SidebarComponent.vue').default);
 /**
  *Funcionalidades axios para los productos.
 */
@@ -52,8 +53,10 @@ Vue.component('pagination', require('laravel-vue-pagination'));
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import router from './routes'
 
 const app = new Vue({
     el: '#app',
+    router
 });
 

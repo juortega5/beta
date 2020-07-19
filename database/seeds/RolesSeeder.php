@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class prm_rolesSeeder extends Seeder
+class RolesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class prm_rolesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('prm_roles')->insert([
+        DB::table('roles')->insert([
 			[
 				'rol' => 'Cliente',
 				'slug' => 'cliente',

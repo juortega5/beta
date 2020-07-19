@@ -29,22 +29,26 @@
 	 		}
 	 	},
         mounted() {
+        	//Recibe los datos y los carga en la modalDelete.
             EventBus.$on('tercero-delete', data => {
 	 			this.slug = data.slug;
 	 			this.nombre_tercero = data.nombre_tercero;
 			});
         },
         methods: {
+        	//Envia los datos al controlador para eliminar un registro.
         	destroyTercero: function(){
         		let metodo = this;
     			axios.delete('http://beta.test/terceros/'+this.slug).
     			then(function(response){
+    				//Evento para hacer la actualizacion de registros al eliminar.
         			EventBus.$emit('tercero-destroy',response.data)
 					metodo.reset();
     			}).catch(function(error){
     				console.log(error)
     			});
         	},
+        	//Limpia la modal.
         	reset: function(){
         		this.nombre_tercero = "" ;
 	 			this.slug = "";

@@ -24,12 +24,12 @@
 				</div>
 				<div class="form-group">
 					<label for="unidad">Tipo de unidad</label>
-					<select v-model="id_unidades" class="form-control" id="unidad" aria-describedby="unidadHelp">
+					<select v-model="unidad_id" class="form-control" id="unidad" aria-describedby="unidadHelp">
 						<option disabled value="">Seleccione un producto</option>
 						<option v-for="(unidad,key) in unidades" :value="key">{{ unidad }}</option>
 					</select>
 					<small id="unidadHelp" class="form-text text-muted">Indique si el producto se mide por UND o Kg.</small>
-					<small id="unidadError" class="form-text text-danger">{{ error.id_unidades }}</small>
+					<small id="unidadError" class="form-text text-danger">{{ error.unidad_id }}</small>
 				</div>
 				<div class="form-group">
 					<label for="precio">Precio</label>
@@ -53,7 +53,7 @@
 	 	data() {
 	 		return {
 	 			nombre_producto: null,
-	 			id_unidades: "",
+	 			unidad_id: "",
 	 			precio_venta: null,
 	 			slug : null,
 	 			codigo: null,
@@ -62,18 +62,21 @@
 	 			unidades: {},
 	 			error: {
 	 				nombre_producto: null,
-	 				id_unidades: null,
+	 				unidad_id: null,
 	 				precio_venta: null,
 	 				codigo: null
 	 			}
 	 		}
 	 	},
         mounted() {
+        	//Hace el focus al abrir la modal
         	$(function(){ $('#crearProducto').on('shown.bs.modal', function (){ $('#codigo').focus(); }); });  
+        	//Carga los datos del select de tipo de unidad en la modal.
         	axios.get('http://beta.test/productos').then(response => { 	this.unidades =  response.data.unidades })
+            //Carga los datos del producto en la modal cuando se edita.
             EventBus.$on('producto-edit', data => {
 				this.nombre_producto = data.nombre_producto;
-				this.id_unidades = data.id_unidades;
+				this.unidad_id = data.unidad_id;
 	 			this.precio_venta = data.precio_venta;
 	 			this.slug = data.slug;
 	 			this.codigo = data.codigo;
@@ -82,15 +85,16 @@
 			});
         },
         created(){
+        	//Imprime los errores de validación.
 			EventBus.$on('producto-error', data => {
 				this.error = {}
 				if(data.errors.nombre_producto)
 				{
 					this.error.nombre_producto = data.errors.nombre_producto
 				}
-				if (data.errors.id_unidades) 
+				if (data.errors.unidad_id) 
 				{
-					this.error.id_unidades = data.errors.id_unidades
+					this.error.unidad_id = data.errors.unidad_id
 				}
 				if (data.errors.precio_venta) 
 				{
@@ -103,43 +107,51 @@
 			});
 		},
         methods: {
+        	//Envia los datos al controlador para guardar o editar un registro.
         	saveProducto: function(){
         		let metodo = this;
-        		if (this.update==0)
+        		//Guardar registro.
+        		if (this.update == 0)
         		{
         			axios.post('http://beta.test/productos',{
 	        			nombre_producto: this.nombre_producto,
-		 				id_unidades: this.id_unidades,
+		 				unidad_id: this.unidad_id,
 		 				precio_venta: this.precio_venta,
 		 				codigo: this.codigo,
         			}).then(function(response){
+        				//Evento para hacer la actualizacion de registros al crear registros.
 	        			EventBus.$emit('producto-added',response.data.productos)
 						metodo.reset();
         			}).catch(function(error){
+        				//Evento para enviar los errores al intentar crear registros.
         				EventBus.$emit('producto-error',error.response.data)
         				console.log(error)
         			});
         		}
+        		//Editar registro.
         		else
         		{
         			axios.put('http://beta.test/productos/'+this.slug,{
 	        			nombre_producto: this.nombre_producto,
-		 				id_unidades: this.id_unidades,
+		 				unidad_id: this.unidad_id,
 		 				precio_venta: this.precio_venta,
 		 				codigo: this.codigo,
 		 				slug: this.slug,
         			}).then(function(response){
+        				//Evento para hacer la actualizacion de registros al editar registros.
         				EventBus.$emit('producto-update',response.data.productos)
 						metodo.reset();
         			}).catch(function(error){
+        				//Evento para enviar los errores al intentar editar registros.
         				EventBus.$emit('producto-error',error.response.data)
         				console.log(error)
         			});
         		}
         	},
+        	//Limpia la modal.
         	reset: function(){
         		this.nombre_producto = "" ;
-				this.id_unidades = "";
+				this.unidad_id = "";
 	 			this.precio_venta = "";
 	 			this.codigo = "";
 	 			this.slug = "";

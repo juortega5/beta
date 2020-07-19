@@ -64,13 +64,16 @@
 			this.getResults();
 		},
 		created(){
+			//Al crear un registro actualiza la tabla.
 			EventBus.$on('tercero-added', data => {
 				this.terceros.push(data)
 				this.getResults()
 			});
+			//Al eliminar un registro actualiza la tabla.
 			EventBus.$on('tercero-destroy', data => {
 				this.getResults()
 			});
+			//Al buscar un registro actualiza la tabla dependiendo de la busqueda.
 			EventBus.$on('tercero-search', data => {
 				this.terceros = data.terceros.data
 				this.paginacion = data.terceros 
@@ -78,20 +81,24 @@
 			});
 		},
 		updated(){
+			//Al editar un registro actualiza la tabla.
 			EventBus.$on('tercero-update', data => {
 				this.getResults()
 			});
 		},
 		methods: {
+			//Obtiene los terceros y realiza la paginación.
 			getResults(page = 1) {
 					axios.get('http://beta.test/terceros?page=' +page+ '&buscar='+this.buscar).then(response => { 
 					this.terceros = response.data.terceros.data
 					this.paginacion = response.data.terceros; 
 				});
 			},
+			//Genera el evento para enviar datos a la Modal y editar.
 			editTerceros(data){
 				EventBus.$emit('tercero-edit',data)
 			},
+			//Genera el evento para enviar datos a la ModalDelete y eliminar.
 			deleteTerceros(data){
 				EventBus.$emit('tercero-delete',data)
 			}
