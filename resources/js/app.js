@@ -42,7 +42,6 @@ Vue.component('tablacompras-component', require('./components/compras/TablaCompo
 Vue.component('modalcompras-component', require('./components/compras/ModalComponent.vue').default);
 Vue.component('modaldeletecompras-component', require('./components/compras/ModalDeleteComponent.vue').default);
 Vue.component('buscarcompras-component', require('./components/compras/BuscarComponent.vue').default);
-Vue.component('auxiliarterceros-component', require('./components/compras/TercerosAuxiliarComponent.vue').default);
 Vue.component('addproductos-component', require('./components/compras/ProductosAddComponent.vue').default);
 /**
  *Paginación general.

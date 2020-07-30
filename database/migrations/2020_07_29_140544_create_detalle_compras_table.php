@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolTerceroTable extends Migration
+class CreateDetalleComprasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,19 @@ class CreateRolTerceroTable extends Migration
      */
     public function up()
     {
-        Schema::create('rol_tercero', function (Blueprint $table) {
+        Schema::create('detalle_compras', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('rol_id')->unsigned();
-            $table->integer('tercero_id')->unsigned();
-            $table->foreign('rol_id')->references('id')->on('roles')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-            $table->foreign('tercero_id')->references('id')->on('terceros')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+            $table->integer('cantidad');
+            $table->integer('precio_compra');
+            $table->integer('producto_id')->unsigned();
+            $table->integer('compra_id')->unsigned();
             $table->timestamps();
+            $table->foreign('producto_id')->references('id')->on('productos')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $table->foreign('compra_id')->references('id')->on('compras')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
         });
     }
 
@@ -34,6 +36,6 @@ class CreateRolTerceroTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rol_tercero');
+        Schema::dropIfExists('detalle_compras');
     }
 }

@@ -19,7 +19,7 @@ class TerceroController extends Controller
     {
         if ($request->ajax()) 
         {
-            if($request->input('buscar') && $request->input('buscar')<>"null")
+            if($request->input('buscar') && $request->input('buscar') <> "null")
             {
                 $terceros = Tercero::getAllTercero($request->input('buscar'))->paginate(2);
             }

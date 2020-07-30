@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Compra;
+use App\DetalleCompra;
+use App\Http\Requests\StoreComprasRequest;
 
 class CompraController extends Controller
 {
@@ -11,9 +14,22 @@ class CompraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-       return view('compras.index');
+        if ($request->ajax()) 
+        {
+            if($request->input('buscar') && $request->input('buscar') <> "null")
+            {
+                $compras = Compra::getAllFactura($request->input('buscar'))->paginate(2);
+            }
+            else
+            {
+                $compras = Compra::with('tercero')->paginate(2);
+            }
+            $data = ["compras"=>$compras,"buscar"=>$request->input('buscar')];
+            return response()->json($data,200);
+        }
+        return view('layouts.app');
     }
 
     /**
@@ -32,9 +48,27 @@ class CompraController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreComprasRequest $request)
     {
-        //
+        if ($request->ajax()) 
+        {
+            $compra = new Compra();
+            $compra->numero = $request->input('numero');
+            $compra->fecha = $request->input('fecha');
+            $compra->tercero_id = $request->input('tercero_id');
+            $compra->save();
+            $compras = Compra::with('tercero')->get()->last();
+            foreach ($request->productos as $producto) 
+            {
+                $productos = new DetalleCompra();
+                $productos->cantidad = $producto['cantidad'];
+                $productos->precio_compra = $producto['precio'];
+                $productos->producto_id = $producto['id'];
+                $productos->compra_id = $compras->id;
+                $productos->save();
+            }
+            return response()->json(["message"=>"compra creada","compras"=>$compras],200);
+        }
     }
 
     /**
@@ -79,6 +113,7 @@ class CompraController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Compra::destroy($id);
+        return response()->json(["message"=>"Factura eliminada"],200);
     }
 }

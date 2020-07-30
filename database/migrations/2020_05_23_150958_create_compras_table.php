@@ -15,12 +15,12 @@ class CreateComprasTable extends Migration
     {
         Schema::create('compras', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('numero');
+            $table->string('numero',100);
             $table->date('fecha');
-            $table->integer('id_tercero')->unsigned();
-            $table->foreign('id_tercero')->references('id')->on('terceros')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->integer('tercero_id')->unsigned();
+            $table->foreign('tercero_id')->references('id')->on('terceros')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
             $table->timestamps();
         });
     }

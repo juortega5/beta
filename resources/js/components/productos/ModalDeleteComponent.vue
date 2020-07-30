@@ -53,7 +53,8 @@
         		this.nombre_producto = "" ;
 	 			this.slug = "";
 	 			$('#deleteProducto').modal('hide');
-    			$(document.body).removeClass('modal-open');
+    			$('body').removeClass('modal-open');
+    			//$(document.body).removeClass('modal-open');
 				$('.modal-backdrop').remove();
         	}
         }

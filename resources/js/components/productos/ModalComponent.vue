@@ -50,6 +50,9 @@
 <script>
 	import EventBus from '../../event-bus';
 	export default {
+		props: {
+			codigoPrevio: String,
+		},
 	 	data() {
 	 		return {
 	 			nombre_producto: null,
@@ -69,6 +72,7 @@
 	 		}
 	 	},
         mounted() {
+        	this.codigo = this.codigoPrevio;
         	//Hace el focus al abrir la modal
         	$(function(){ $('#crearProducto').on('shown.bs.modal', function (){ $('#codigo').focus(); }); });  
         	//Carga los datos del select de tipo de unidad en la modal.
@@ -119,8 +123,18 @@
 		 				precio_venta: this.precio_venta,
 		 				codigo: this.codigo,
         			}).then(function(response){
-        				//Evento para hacer la actualizacion de registros al crear registros.
-	        			EventBus.$emit('producto-added',response.data.productos)
+        				//Si recibe el codigoPrevio vuelve al modulo de la factura
+    					//de lo contrario actua como si fuera el modulo de productos.
+	        			if (metodo.codigoPrevio == undefined) 
+	        			{
+	        				//Evento para hacer la actualizacion de registros al crear registros.
+							EventBus.$emit('producto-added',response.data.productos)
+		    			}
+		    			else
+		    			{
+		    				//Evento para volver al modulo factura.
+		    				EventBus.$emit('volver-moduloAdd',[false,1])
+		    			}
 						metodo.reset();
         			}).catch(function(error){
         				//Evento para enviar los errores al intentar crear registros.
@@ -159,8 +173,17 @@
 	 			this.update = 0;
 	 			this.error = {};
 	 			$('#crearProducto').modal('hide');
-    			$(document.body).removeClass('modal-open');
-				$('.modal-backdrop').remove();
+    			$('body').removeClass('modal-open');
+    			//$(document.body).removeClass('modal-open');
+    			//Si recibe el codigoPrevio vuelve al modulo de la factura
+    			//de lo contrario actua como si fuera el modulo de productos.
+				if (this.codigoPrevio == undefined) {
+					$('.modal-backdrop').remove();
+    			}
+    			else
+    			{
+    				EventBus.$emit('volver-moduloAdd',[false,0])
+    			}
         	},
         	
         },

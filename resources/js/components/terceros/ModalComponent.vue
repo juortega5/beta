@@ -1,5 +1,5 @@
 <template>
-	<div class="modal fade" id="crearTercero" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div  class="modal fade" id="crearTercero" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -44,7 +44,7 @@
 					<small id="rolError" class="form-text text-danger">{{ error.roles }}</small>
 				</div>
 				<div class="form-group" align="center">
-					<button type="submit" class="btn btn-success">Guardar</button> 
+					<button type="submit" class="btn btn-success" >Guardar</button> 
 					<button type="button" @click="reset()" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 				</div>
 	        </form>
@@ -80,7 +80,6 @@
 	 		}
 	 	},
         mounted() {
-        	console.log(this.nitPrevio)
         	this.nit = this.nitPrevio;
         	//Carga los datos del select de los roles en la modal.
             axios.get('http://beta.test/terceros').then(response => { 	this.listaRoles =  response.data.listaRoles })
@@ -129,7 +128,7 @@
         	saveTercero: function(){
         		let metodo = this;
         		//Guardar registro.
-        		if (this.update==0)
+        		if (this.update == 0)
         		{
         			axios.post('http://beta.test/terceros',{
 						nombre_tercero: this.nombre_tercero,
@@ -138,8 +137,18 @@
 						direccion: this.direccion,
 						roles: this.roles
         			}).then(function(response){
-        				//Evento para hacer la actualizacion de registros al crear registros.
-	        			EventBus.$emit('tercero-added',response.data.terceros)
+        				//Si recibe el nit previo vuelve al modulo de la factura
+    					//de lo contrario actua como si fuera el modulo de terceros.
+        				if (metodo.nitPrevio == undefined) 
+        				{
+							//Evento para hacer la actualizacion de registros al crear registros.
+	        				EventBus.$emit('tercero-added',response.data.terceros)
+		    			}
+		    			else
+		    			{
+		    				//Evento para volver al modulo factura.
+		    				EventBus.$emit('volver-factura',[false,1])
+		    			}
 						metodo.reset();
         			}).catch(function(error){
         				//Evento para enviar los errores al intentar crear registros.
@@ -178,11 +187,19 @@
 	 			this.titulo = "Nuevo Tercero";
 	 			this.update = 0;
 	 			this.error = {};
-	 			$('input').prop( "checked",false)
+	 			$('input').prop( "checked",false)	
 	 			$('#crearTercero').modal('hide');
-    			$(document.body).removeClass('modal-open');
-    			$('.modal-backdrop').remove();
-
+	 			$('body').removeClass('modal-open');
+    			//$(document.body).removeClass('modal-open');
+    			//Si recibe el nit previo vuelve al modulo de la factura
+    			//de lo contrario actua como si fuera el modulo de terceros.
+    			if (this.nitPrevio == undefined) {
+					$('.modal-backdrop').remove();
+    			}
+    			else
+    			{
+    				EventBus.$emit('volver-factura',[false,0])
+    			}
         	},
 
         }

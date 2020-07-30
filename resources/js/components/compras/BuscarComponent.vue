@@ -1,6 +1,6 @@
 <template>
 	<div class="input-group mb-3">
-		<input type="text" v-on:keyup="searchProducto()" class="form-control" v-model="buscar" id="buscar" placeholder="Buscar facturas">
+		<input type="text" v-on:keyup="searchFactura()" class="form-control" v-model="buscar" id="buscar" placeholder="Buscar facturas">
 	</div>
 </template>
 <script>
@@ -14,15 +14,17 @@
         mounted() {
         },
         methods: {
-        	searchProducto: function(e){
+            //Envia los datos al controlador para buscar un registro.
+        	searchFactura: function(e){
         		var dato = $('#buscar').val()
         		let me = this;
-    			axios.get('http://beta.test/productos',{
+    			axios.get('http://beta.test/compras',{
         			params:{
                         buscar: dato,
                     }
     			}).then(function(response){
-                    EventBus.$emit('producto-search',response.data)
+                    //Evento para hacer la actualizacion de registros al buscar.
+                    EventBus.$emit('compra-search',response.data)
     			}).catch(function(error){
     				console.log(error)
     			});

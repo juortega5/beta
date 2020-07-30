@@ -20,6 +20,11 @@ export default new Router({
 			name:'terceros',
 			component: require('./views/terceros/TercerosComponent').default
 		},
+		{
+			path:'/compras',
+			name:'compras',
+			component: require('./views/compras/ComprasComponent').default
+		},
 	],
 	mode: 'history'
 })

@@ -53,7 +53,8 @@
         		this.nombre_tercero = "" ;
 	 			this.slug = "";
 	 			$('#deleteTercero').modal('hide');
-    			$(document.body).removeClass('modal-open');
+    			$('body').removeClass('modal-open');
+    			//$(document.body).removeClass('modal-open');
 				$('.modal-backdrop').remove();
         	}
         }

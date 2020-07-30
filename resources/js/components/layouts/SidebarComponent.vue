@@ -16,7 +16,7 @@
 		        <router-link class="nav-link" :to="{name: 'terceros'}">Terceros</router-link>
 		      </li>
 		       <li class="nav-item">
-		        <a class="nav-link" href="">Compras</a>
+		         <router-link class="nav-link" :to="{name: 'compras'}">Compras</router-link>
 		      </li>
 		       <li class="nav-item">
 		        <a class="nav-link" href="#">Ventas</a>

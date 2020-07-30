@@ -1,17 +1,17 @@
 <template>
-	<div class="modal fade" id="deleteProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="deleteCompra" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Eliminar producto</h5>
+	        <h5 class="modal-title" id="exampleModalLabel">Eliminar factura</h5>
 	        <button type="button" @click="reset()" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	       	<p>Desea eliminar el producto: {{ nombre_producto }}.</p>
+	       	<p>Desea eliminar la factura de compra número: {{ numero }}.</p>
 			<div class="form-group" align="center">
-				<button type="button"  @click="destroyProducto()" class="btn btn-danger">Eliminar</button> 
+				<button type="button"  @click="destroyFactura()" class="btn btn-danger">Eliminar</button> 
 				<button type="button" @click="reset()" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 			</div>
 	      </div>
@@ -24,32 +24,37 @@
 	 export default {
 	 	data() {
 	 		return {
-	 			nombre_producto: null,
-	 			slug : null
+	 			numero: null,
+	 			id : null
 	 		}
 	 	},
         mounted() {
-            EventBus.$on('producto-delete', data => {
-	 			this.slug = data.slug;
-	 			this.nombre_producto = data.nombre_producto;
+        	//Recibe los datos y los carga en la modalDelete.
+            EventBus.$on('compra-delete', data => {
+	 			this.numero = data.numero;
+	 			this.id = data.id;
 			});
         },
         methods: {
-        	destroyProducto: function(){
+        	//Envia los datos al controlador para eliminar un registro.
+        	destroyFactura: function(){
         		let metodo = this;
-    			axios.delete('http://beta.test/productos/'+this.slug).
+    			axios.delete('http://beta.test/compras/'+this.id).
     			then(function(response){
-        			EventBus.$emit('producto-destroy',response.data)
+    				//Evento para hacer la actualizacion de registros al eliminar.
+        			EventBus.$emit('compra-destroy',response.data)
 					metodo.reset();
     			}).catch(function(error){
     				console.log(error)
     			});
         	},
+        	//Limpia la modal.
         	reset: function(){
-        		this.nombre_producto = "" ;
-	 			this.slug = "";
-	 			$('#deleteProducto').modal('hide');
-    			$(document.body).removeClass('modal-open');
+        		this.numero = "" ;
+	 			this.id = "";
+	 			$('#deleteCompra').modal('hide');
+    			$('body').removeClass('modal-open');
+    			//$(document.body).removeClass('modal-open');
 				$('.modal-backdrop').remove();
         	}
         }

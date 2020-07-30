@@ -10,6 +10,7 @@ class Tercero extends Model
 {
 
     protected $table = "terceros";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -35,6 +36,16 @@ class Tercero extends Model
     public function roles()
     {
         return $this->belongsToMany('App\Rol','rol_tercero','tercero_id','rol_id');
+    }
+
+    /**
+     * Relación entre compras y terceros.
+     *
+     * @return relacion
+     */
+    public function compras()
+    {
+        return $this->hasMany('App\Compra');
     }
 
     /**
