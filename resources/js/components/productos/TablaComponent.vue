@@ -3,7 +3,7 @@
 		<table class="table table-dark table-hover table-bordered table-sm">
 			<thead>
 				<tr align="center">
-					<th colspan="4">Listado de Productos</th>
+					<th colspan="5">Listado de Productos</th>
 					<th>
 						<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
 						  Nuevo+
@@ -13,6 +13,7 @@
 			    <tr align="center">
 			      <th scope="col">Nombre del producto</th>
 			      <th scope="col">Unidad de medida</th>
+			      <th scope="col">Categoría</th>
 			      <th scope="col">Precio por unidad</th>
 			      <th scope="col">Editar</th>
 			      <th scope="col">Eliminar</th>
@@ -21,7 +22,8 @@
 				<tbody>
 					<tr v-for="producto in productos">
 						<td>{{ producto.nombre_producto }}</td>
-						<td align="center">{{ producto.unidad.unidad }}</td>      
+						<td align="center">{{ producto.unidad.unidad }}</td>   
+						<td align="center">{{ producto.categoria.categoria }}</td>    
 						<td align="center">{{ producto.precio_venta }}</td>
 						<td align="center">
 							<button type="button" @click="editProductos(producto)" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">

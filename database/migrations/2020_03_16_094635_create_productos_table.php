@@ -19,9 +19,13 @@ class CreateProductosTable extends Migration
             $table->string('codigo',100)->unique();
             $table->string('slug',100)->unique();
             $table->integer('unidad_id')->unsigned();
+            $table->integer('categoria_id')->unsigned();
             $table->integer('precio_venta');
             $table->timestamps();            
             $table->foreign('unidad_id')->references('id')->on('unidades')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $table->foreign('categoria_id')->references('id')->on('categorias')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });

@@ -24,10 +24,11 @@ class ProductoController extends Controller
             }
             else
             {
-                $productos = Producto::with('unidad')->paginate(2);
+                $productos = Producto::with('unidad')->with('categoria')->paginate(2);
             }
             $unidades = Producto::getUnidades();
-            $data = ["productos"=>$productos,"unidades"=> $unidades,"buscar"=>$request->input('buscar')];
+            $categorias = Producto::getCategorias();
+            $data = ["productos"=>$productos,"unidades"=> $unidades,"categorias"=>$categorias,"buscar"=>$request->input('buscar')];
             return response()->json($data,200);
         }
         return view('layouts.app');
@@ -61,9 +62,10 @@ class ProductoController extends Controller
             $producto->codigo = $request->input('codigo');
             $producto->slug = Str::of($request->input('nombre_producto'))->slug('-');
             $producto->unidad_id = $request->input('unidad_id');
+            $producto->categoria_id = $request->input('categoria_id');
             $producto->precio_venta = $request->input('precio_venta');
             $producto->save();
-            $productos = Producto::with('unidad')->where('productos.slug', $producto->slug)->first();
+            $productos = Producto::with('unidad')->with('categoria')->where('productos.slug', $producto->slug)->first();
             return response()->json(["message"=>"Producto creado","productos"=>$productos],200);
         }
     }
@@ -127,9 +129,10 @@ class ProductoController extends Controller
                     $producto->nombre_producto = $request->input('nombre_producto');
                     $producto->codigo = $request->input('codigo');
                     $producto->unidad_id = $request->input('unidad_id');
+                    $producto->categoria_id = $request->input('categoria_id');
                     $producto->precio_venta = $request->input('precio_venta');
                     $producto->save();
-                    $productos = Producto::with('unidad')->where('productos.slug', $producto->slug)->first();
+                    $productos = Producto::with('unidad')->with('categoria')->where('productos.slug', $producto->slug)->first();
                     return response()->json(["message"=>"Producto editado","slug"=>$producto->slug,"productos"=>$productos],200);
                 break;
             }

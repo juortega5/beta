@@ -17,6 +17,15 @@
 					<small id="codigoError" class="form-text text-danger">{{ error.codigo }}</small>
 				</div>
 				<div class="form-group">
+					<label for="categoria">Categoría</label>
+					<select v-model="categoria_id" class="form-control" id="categoria" aria-describedby="categoriaHelp">
+						<option disabled value="">Seleccione una categoría</option>
+						<option v-for="(categoria,key) in categorias" :value="key">{{ categoria }}</option>
+					</select>
+					<small id="categoriaHelp" class="form-text text-muted">Indique la categoría del producto.</small>
+					<small id="categoriaHelpError" class="form-text text-danger">{{ error.unidad_id }}</small>
+				</div>
+				<div class="form-group">
 					<label for="nombreProducto">Producto</label>
 					<input v-model="nombre_producto" type="text" class="form-control" id="nombreProducto" aria-describedby="nombreHelp" placeholder="Producto" onKeyPress="return soloLetrasNumeros(event)">
 					<small id="nombreHelp" class="form-text text-muted">Ingrese el nombre del producto.</small>
@@ -25,7 +34,7 @@
 				<div class="form-group">
 					<label for="unidad">Tipo de unidad</label>
 					<select v-model="unidad_id" class="form-control" id="unidad" aria-describedby="unidadHelp">
-						<option disabled value="">Seleccione un producto</option>
+						<option disabled value="">Seleccione un tipo</option>
 						<option v-for="(unidad,key) in unidades" :value="key">{{ unidad }}</option>
 					</select>
 					<small id="unidadHelp" class="form-text text-muted">Indique si el producto se mide por UND o Kg.</small>
@@ -57,14 +66,17 @@
 	 		return {
 	 			nombre_producto: null,
 	 			unidad_id: "",
+	 			categoria_id: "",
 	 			precio_venta: null,
 	 			slug : null,
 	 			codigo: null,
 	 			titulo : "Nuevo Producto",
 	 			update : 0,
 	 			unidades: {},
+	 			categorias: {},
 	 			error: {
 	 				nombre_producto: null,
+	 				categoria_id: null,
 	 				unidad_id: null,
 	 				precio_venta: null,
 	 				codigo: null
@@ -77,10 +89,13 @@
         	$(function(){ $('#crearProducto').on('shown.bs.modal', function (){ $('#codigo').focus(); }); });  
         	//Carga los datos del select de tipo de unidad en la modal.
         	axios.get('http://beta.test/productos').then(response => { 	this.unidades =  response.data.unidades })
+        	//Carga los datos del select de categoria en la modal.
+        	axios.get('http://beta.test/productos').then(response => { 	this.categorias =  response.data.categorias })
             //Carga los datos del producto en la modal cuando se edita.
             EventBus.$on('producto-edit', data => {
 				this.nombre_producto = data.nombre_producto;
 				this.unidad_id = data.unidad_id;
+				this.categoria_id = data.categoria_id;
 	 			this.precio_venta = data.precio_venta;
 	 			this.slug = data.slug;
 	 			this.codigo = data.codigo;
@@ -99,6 +114,10 @@
 				if (data.errors.unidad_id) 
 				{
 					this.error.unidad_id = data.errors.unidad_id
+				}
+				if (data.errors.categoria_id) 
+				{
+					this.error.categoria_id = data.errors.categoria_id
 				}
 				if (data.errors.precio_venta) 
 				{
@@ -120,6 +139,7 @@
         			axios.post('http://beta.test/productos',{
 	        			nombre_producto: this.nombre_producto,
 		 				unidad_id: this.unidad_id,
+		 				categoria_id: this.categoria_id,
 		 				precio_venta: this.precio_venta,
 		 				codigo: this.codigo,
         			}).then(function(response){
@@ -148,6 +168,7 @@
         			axios.put('http://beta.test/productos/'+this.slug,{
 	        			nombre_producto: this.nombre_producto,
 		 				unidad_id: this.unidad_id,
+		 				categoria_id: this.categoria_id,
 		 				precio_venta: this.precio_venta,
 		 				codigo: this.codigo,
 		 				slug: this.slug,
@@ -166,6 +187,7 @@
         	reset: function(){
         		this.nombre_producto = "" ;
 				this.unidad_id = "";
+				this.categoria_id = "";
 	 			this.precio_venta = "";
 	 			this.codigo = "";
 	 			this.slug = "";

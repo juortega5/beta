@@ -2687,6 +2687,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2696,14 +2705,17 @@ __webpack_require__.r(__webpack_exports__);
     return {
       nombre_producto: null,
       unidad_id: "",
+      categoria_id: "",
       precio_venta: null,
       slug: null,
       codigo: null,
       titulo: "Nuevo Producto",
       update: 0,
       unidades: {},
+      categorias: {},
       error: {
         nombre_producto: null,
+        categoria_id: null,
         unidad_id: null,
         precio_venta: null,
         codigo: null
@@ -2723,11 +2735,16 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('http://beta.test/productos').then(function (response) {
       _this.unidades = response.data.unidades;
+    }); //Carga los datos del select de categoria en la modal.
+
+    axios.get('http://beta.test/productos').then(function (response) {
+      _this.categorias = response.data.categorias;
     }); //Carga los datos del producto en la modal cuando se edita.
 
     _event_bus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('producto-edit', function (data) {
       _this.nombre_producto = data.nombre_producto;
       _this.unidad_id = data.unidad_id;
+      _this.categoria_id = data.categoria_id;
       _this.precio_venta = data.precio_venta;
       _this.slug = data.slug;
       _this.codigo = data.codigo;
@@ -2750,6 +2767,10 @@ __webpack_require__.r(__webpack_exports__);
         _this2.error.unidad_id = data.errors.unidad_id;
       }
 
+      if (data.errors.categoria_id) {
+        _this2.error.categoria_id = data.errors.categoria_id;
+      }
+
       if (data.errors.precio_venta) {
         _this2.error.precio_venta = data.errors.precio_venta;
       }
@@ -2768,6 +2789,7 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('http://beta.test/productos', {
           nombre_producto: this.nombre_producto,
           unidad_id: this.unidad_id,
+          categoria_id: this.categoria_id,
           precio_venta: this.precio_venta,
           codigo: this.codigo
         }).then(function (response) {
@@ -2792,6 +2814,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.put('http://beta.test/productos/' + this.slug, {
             nombre_producto: this.nombre_producto,
             unidad_id: this.unidad_id,
+            categoria_id: this.categoria_id,
             precio_venta: this.precio_venta,
             codigo: this.codigo,
             slug: this.slug
@@ -2810,6 +2833,7 @@ __webpack_require__.r(__webpack_exports__);
     reset: function reset() {
       this.nombre_producto = "";
       this.unidad_id = "";
+      this.categoria_id = "";
       this.precio_venta = "";
       this.codigo = "";
       this.slug = "";
@@ -2916,6 +2940,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _event_bus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../event-bus */ "./resources/js/event-bus.js");
+//
+//
 //
 //
 //
@@ -41534,6 +41560,76 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "categoria" } }, [
+                    _vm._v("Categoría")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.categoria_id,
+                          expression: "categoria_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "categoria",
+                        "aria-describedby": "categoriaHelp"
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.categoria_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { disabled: "", value: "" } }, [
+                        _vm._v("Seleccione una categoría")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.categorias, function(categoria, key) {
+                        return _c("option", { domProps: { value: key } }, [
+                          _vm._v(_vm._s(categoria))
+                        ])
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "small",
+                    {
+                      staticClass: "form-text text-muted",
+                      attrs: { id: "categoriaHelp" }
+                    },
+                    [_vm._v("Indique la categoría del producto.")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "small",
+                    {
+                      staticClass: "form-text text-danger",
+                      attrs: { id: "categoriaHelpError" }
+                    },
+                    [_vm._v(_vm._s(_vm.error.unidad_id))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "nombreProducto" } }, [
                     _vm._v("Producto")
                   ]),
@@ -41621,7 +41717,7 @@ var render = function() {
                     },
                     [
                       _c("option", { attrs: { disabled: "", value: "" } }, [
-                        _vm._v("Seleccione un producto")
+                        _vm._v("Seleccione un tipo")
                       ]),
                       _vm._v(" "),
                       _vm._l(_vm.unidades, function(unidad, key) {
@@ -41898,6 +41994,10 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("td", { attrs: { align: "center" } }, [
+                  _vm._v(_vm._s(producto.categoria.categoria))
+                ]),
+                _vm._v(" "),
+                _c("td", { attrs: { align: "center" } }, [
                   _vm._v(_vm._s(producto.precio_venta))
                 ]),
                 _vm._v(" "),
@@ -41964,7 +42064,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", { attrs: { align: "center" } }, [
-        _c("th", { attrs: { colspan: "4" } }, [_vm._v("Listado de Productos")]),
+        _c("th", { attrs: { colspan: "5" } }, [_vm._v("Listado de Productos")]),
         _vm._v(" "),
         _c("th", [
           _c(
@@ -41987,6 +42087,8 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre del producto")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Unidad de medida")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Categoría")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio por unidad")]),
         _vm._v(" "),

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Unidad;
+use App\Categoria;
 
 class Producto extends Model
 {
@@ -38,6 +39,16 @@ class Producto extends Model
     	return $this->belongsTo('App\Unidad','unidad_id');
     }
 
+     /**
+     * Relación entre productos y categorias.
+     *
+     * @return relacion
+     */
+    public function categoria()
+    {
+        return $this->belongsTo('App\Categoria','categoria_id');
+    }
+
     /**
      * Crea un arreglo con los tipos de unidades.
      *
@@ -54,6 +65,22 @@ class Producto extends Model
         return $arreglo;
     }
 
+     /**
+     * Crea un arreglo con los tipos de categorías.
+     *
+     * @return array
+     */
+    public static function getCategorias()
+    {
+        $objCategorias = Categoria::all();
+        $arreglo = [];
+        foreach($objCategorias as $objCategorias)
+        {
+            $arreglo[$objCategorias->id] = $objCategorias->categoria;
+        }
+        return $arreglo;
+    }
+
     /**
      * Busca coincidencias de productos con el string ingresado.
      *
@@ -62,7 +89,7 @@ class Producto extends Model
      */
     public static function getAllProductos($producto)
     {
-        return static::where('nombre_producto','LIKE',"%$producto%")->with('unidad');
+        return static::where('nombre_producto','LIKE',"%$producto%")->with('unidad')->with('categoria');
     }
 
     /**
