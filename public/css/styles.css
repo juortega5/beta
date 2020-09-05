@@ -1,0 +1,16 @@
+
+.pagination { 
+	justify-content: center!important; 
+} 
+
+.oculto { 
+	display: none; 
+}
+
+.modal-backdrop {   
+    display: none;    
+}
+
+.centrado{
+	text-align:center;
+}

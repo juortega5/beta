@@ -79,12 +79,18 @@ class TerceroController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $nit
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $nombre
      * @return \Illuminate\Http\Response
      */
-    public function show($nit)
+    public function show($nombre,Request $request)
     {
-        $terceros = Tercero::getTercero($nit);
+        $rol = $request->input('rol');
+        $terceros = Tercero::getAllTercero($nombre,$rol)->paginate(5);
+        if (count($terceros) == 0)
+        {
+            $terceros = 0;
+        }
         $data = ["terceros"=>$terceros];
         return response()->json($data,200);
     }
@@ -92,12 +98,14 @@ class TerceroController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $nombre
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($nombre)
     {
-        //
+        $tercero = Tercero::getTercero($nombre);
+        $data = ["terceros"=>$tercero];
+        return response()->json($data,200);
     }
 
     /**
@@ -164,5 +172,23 @@ class TerceroController extends Controller
     {
         $tercero->delete();
         return response()->json(["message"=>"Tercero eliminado"],200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $tercero
+     * @return \Illuminate\Http\Response
+     */
+    public function updateRoles(Tercero $tercero,Request $request)
+    {
+        $terceros = Tercero::with('roles')->where('terceros.slug', $tercero->slug)->first();
+        $rol = $request->input('rol');
+        $roles = new RolTercero();
+        $roles->rol_id = $rol;
+        $roles->tercero_id = $terceros->id;
+        $roles->save();
+        return response()->json(["message"=>"Tercero editado","slug"=>$tercero->slug,"terceros"=>$terceros],200);
     }
 }

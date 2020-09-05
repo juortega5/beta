@@ -43,6 +43,8 @@ Vue.component('modalcompras-component', require('./components/compras/ModalCompo
 Vue.component('modaldeletecompras-component', require('./components/compras/ModalDeleteComponent.vue').default);
 Vue.component('buscarcompras-component', require('./components/compras/BuscarComponent.vue').default);
 Vue.component('addproductos-component', require('./components/compras/ProductosAddComponent.vue').default);
+Vue.component('cliente-component', require('./components/compras/ClienteProveedorComponent.vue').default);
+Vue.component('precio-component', require('./components/compras/PrecioComponent.vue').default);
 /**
  *Paginación general.
 */
@@ -52,8 +54,11 @@ Vue.component('pagination', require('laravel-vue-pagination'));
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import router from './routes'
-
+import router from './routes';
+import format from './plugins/vue-format';
+Vue.use(format);
+//Ocultar mensaje de cambiar modo de desarrollo de producción en la consola
+Vue.config.productionTip = false;
 const app = new Vue({
     el: '#app',
     router

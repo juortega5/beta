@@ -24,7 +24,7 @@ class StoreComprasRequest extends FormRequest
     public function rules()
     {
         return [
-            'fecha'=>'required|date',
+            'fecha'=>'required|date|before:tomorrow',
             'numero'=>'required|unique:compras|max:100|min:3|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
         ];
     }

@@ -50,6 +50,16 @@ class Producto extends Model
     }
 
     /**
+     * Relación entre productos y detalle compra.
+     *
+     * @return relacion
+     */
+    public function detalleCompra()
+    {
+        return $this->hasMany('App\DetalleCompra');
+    }
+
+    /**
      * Crea un arreglo con los tipos de unidades.
      *
      * @return array

@@ -13,7 +13,7 @@ class Compra extends Model
      *
      * @var array
      */
-    protected $fillable = ['numero','fecha','tercero_id'];
+    protected $fillable = ['numero','fecha','tercero_id','flag'];
 
     /**
      * Relación entre compras y detalle compras.

@@ -18,6 +18,12 @@ Route::get('/', function () {
 });
 
 Route::resource('productos','ProductoController');
+
+//Ruta extra para agregar rol a un tercero.
+Route::get('terceros/{tercero}/rol', 'TerceroController@updateRoles');
 Route::resource('terceros','TerceroController');
+
 Route::resource('compras','CompraController');
+
+Route::resource('detalleCompra','DetalleCompraController');
 

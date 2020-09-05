@@ -56,17 +56,9 @@ class CompraController extends Controller
             $compra->numero = $request->input('numero');
             $compra->fecha = $request->input('fecha');
             $compra->tercero_id = $request->input('tercero_id');
+            $compra->flag = 1;
             $compra->save();
             $compras = Compra::with('tercero')->get()->last();
-            foreach ($request->productos as $producto) 
-            {
-                $productos = new DetalleCompra();
-                $productos->cantidad = $producto['cantidad'];
-                $productos->precio_compra = $producto['precio'];
-                $productos->producto_id = $producto['id'];
-                $productos->compra_id = $compras->id;
-                $productos->save();
-            }
             return response()->json(["message"=>"compra creada","compras"=>$compras],200);
         }
     }
@@ -102,7 +94,9 @@ class CompraController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $compra = new Compra();
+        $compra->where('id', $id)->update(['flag' => 0]);
+        return response()->json(["message"=>"compra finalizada"],200);
     }
 
     /**

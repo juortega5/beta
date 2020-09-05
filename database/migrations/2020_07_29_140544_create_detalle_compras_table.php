@@ -17,6 +17,7 @@ class CreateDetalleComprasTable extends Migration
             $table->increments('id');
             $table->integer('cantidad');
             $table->integer('precio_compra');
+            $table->integer('precio_venta');
             $table->integer('producto_id')->unsigned();
             $table->integer('compra_id')->unsigned();
             $table->timestamps();

@@ -65,25 +65,31 @@ class Tercero extends Model
     }
 
     /**
-     * Busca coincidencias de terceros con el string ingresado.
+     * Busca coincidencias de terceros con el nombre y rol ingresado.
      *
      * @param  string  $tercero
+     * @param  string  $rol
      * @return colección con las coincidencias
      */
-    public static function getAllTercero($tercero)
+    public static function getAllTercero($tercero,$rol=Null)
     {
-        return static::where('nombre_tercero','LIKE',"%$tercero%")->with('roles');
+        $coincidenciasTerceros = static::where('nombre_tercero','LIKE',"%$tercero%")->with('roles');
+        if ($rol <> Null) 
+        {
+            $coincidenciasTerceros->whereHas('roles',function($query) use ($rol) {  $query->where('rol',$rol); });
+        }
+        return $coincidenciasTerceros;              
     }
 
 
     /**
-     * Busca los datos del tercero con el nit ingresado.
+     * Busca los datos del tercero con el nombre ingresado.
      *
-     * @param  string  $nit
+     * @param  string  $tercero
      * @return colección con los resultados
      */
-    public static function getTercero($nit)
+    public static function getTercero($tercero)
     {
-        return static::where('nit',$nit)->first();
+        return static::where('nombre_tercero',$tercero)->with('roles')->first();
     }
 }

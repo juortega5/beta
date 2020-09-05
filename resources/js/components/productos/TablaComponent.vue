@@ -4,9 +4,14 @@
 			<thead>
 				<tr align="center">
 					<th colspan="5">Listado de Productos</th>
-					<th>
-						<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
-						  Nuevo+
+					<th colspan="2">
+						<button 
+							class="btn btn-success btn-sm" 
+							data-toggle="modal" 
+							data-backdrop="static" 
+							data-target="#crearProducto"
+						>
+						 	Nuevo+
 						</button>
 					</th>
 				</tr>
@@ -24,26 +29,39 @@
 						<td>{{ producto.nombre_producto }}</td>
 						<td align="center">{{ producto.unidad.unidad }}</td>   
 						<td align="center">{{ producto.categoria.categoria }}</td>    
-						<td align="center">{{ producto.precio_venta }}</td>
+						<td align="center">{{ $separador(producto.precio_venta) }}</td>
 						<td align="center">
-							<button type="button" @click="editProductos(producto)" class="btn btn-primary btn-sm" data-toggle="modal" data-backdrop="static" data-target="#crearProducto">
-							  Editar
+							<button 
+								@click="editProductos(producto)" 
+								class="btn btn-primary btn-sm" 
+								data-toggle="modal" 
+								data-backdrop="static" 
+								data-target="#crearProducto"
+							>
+							 	Editar
 							</button>
 						</td>
 						<td align="center">
-							<button type="button" @click="deleteProductos(producto)" class="btn btn-danger btn-sm" data-toggle="modal" data-backdrop="static" data-target="#deleteProducto">
-							  Eliminar
+							<button 
+								@click="deleteProductos(producto)" 
+								class="btn btn-danger btn-sm" 
+								data-toggle="modal" 
+								data-backdrop="static" 
+								data-target="#deleteProducto"
+							>
+							  	Eliminar
 							</button>
 						</td>
 					</tr>
 				</tbody>
 		</table>
-		<pagination :data="paginacion" @pagination-change-page="getResults"></pagination>
+		<pagination 
+			:data="paginacion" 
+			@pagination-change-page="getResults"
+		>
+		</pagination>
 	</div>	
 </template>
-<style scoped>
-	.pagination { justify-content: center!important; } 
-</style>
 <script>
 	import EventBus from '../../event-bus';
 	export default {
@@ -54,47 +72,51 @@
 				buscar: null
 			}
 		},
-		mounted(){
-			this.getResults();
-		},
 		created(){
 			//Al crear un registro actualiza la tabla.
 			EventBus.$on('producto-added', data => {
-				this.productos.push(data)
-				this.getResults()
-			});
-			//Al eliminar un registro actualiza la tabla.
-			EventBus.$on('producto-destroy', data => {
-				this.getResults()
+				this.productos.push(data);
+				this.getResults();
 			});
 			//Al buscar un registro actualiza la tabla dependiendo de la busqueda.
 			EventBus.$on('producto-search', data => {
-				this.productos = data.productos.data
-				this.paginacion = data.productos 
+				this.productos = data.productos.data;
+				this.paginacion = data.productos;
 				this.buscar = data.buscar;
 			});
 		},
+		mounted(){
+			this.getResults();
+		},
 		updated(){
-			//Al editar un registro actualiza la tabla.
+			//Al editar o eliminar un registro actualiza la tabla.
 			EventBus.$on('producto-update', data => {
-				this.getResults()
+				this.getResults();
 			});
 		},
+		beforeDestroy(){
+    		EventBus.$off('producto-added');
+    		EventBus.$off('producto-search');
+    		EventBus.$off('producto-update');
+  		},
 		methods: {
 			//Obtiene los productos y realiza la paginación.
 			getResults(page = 1) {
-					axios.get('http://beta.test/productos?page=' +page+ '&buscar='+this.buscar).then(response => { 
-					this.productos = response.data.productos.data
-					this.paginacion = response.data.productos; 
-				});
+				axios
+					.get('http://beta.test/productos?page=' +page+ '&buscar='+this.buscar)
+					.then(response => { 
+						this.productos = response.data.productos.data;
+						this.paginacion = response.data.productos; 
+					})
+				;
 			},
 			//Genera el evento para enviar datos a la Modal y editar.
 			editProductos(data){
-				EventBus.$emit('producto-edit',data)
+				EventBus.$emit('producto-edit',data);
 			},
 			//Genera el evento para enviar datos a la ModalDelete y eliminar.
 			deleteProductos(data){
-				EventBus.$emit('producto-delete',data)
+				EventBus.$emit('producto-delete',data);
 			}
 		},
 	}

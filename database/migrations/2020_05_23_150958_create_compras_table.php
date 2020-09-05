@@ -17,6 +17,7 @@ class CreateComprasTable extends Migration
             $table->increments('id');
             $table->string('numero',100);
             $table->date('fecha');
+            $table->integer('flag');
             $table->integer('tercero_id')->unsigned();
             $table->foreign('tercero_id')->references('id')->on('terceros')
                     ->onUpdate('cascade')

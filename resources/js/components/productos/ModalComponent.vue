@@ -1,59 +1,190 @@
 <template>
-	<div class="modal fade" id="crearProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">{{ titulo }}</h5>
-	        <button type="button" @click="reset()" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <form  @submit.prevent="saveProducto"   class="form-group" id="formProductos" autocomplete="off">
-				<div class="form-group">
-					<label for="codigo">Codigo</label>
-					<input v-model="codigo" type="text" class="form-control" id="codigo" aria-describedby="codigoHelp">
-					<small id="codigoHelp" class="form-text text-muted">Ingrese el codigo de barras.</small>
-					<small id="codigoError" class="form-text text-danger">{{ error.codigo }}</small>
+	<div 
+		class="modal fade bg-dark" 
+		id="crearProducto" 
+		tabindex="-1" 
+		role="dialog" 
+		aria-labelledby="exampleModalLabel" 
+		aria-hidden="true"
+	>
+		<div 
+			class="modal-dialog" 
+			role="document"
+		>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 
+						class="modal-title" 
+						id="exampleModalLabel"
+					>
+						{{ titulo }}
+					</h5>
+					<button 
+						type="button" 
+						@click="reset()" 
+						class="close" 
+						data-dismiss="modal" 
+						aria-label="Close"
+					>
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
-				<div class="form-group">
-					<label for="categoria">Categoría</label>
-					<select v-model="categoria_id" class="form-control" id="categoria" aria-describedby="categoriaHelp">
-						<option disabled value="">Seleccione una categoría</option>
-						<option v-for="(categoria,key) in categorias" :value="key">{{ categoria }}</option>
-					</select>
-					<small id="categoriaHelp" class="form-text text-muted">Indique la categoría del producto.</small>
-					<small id="categoriaHelpError" class="form-text text-danger">{{ error.unidad_id }}</small>
+				<div class="modal-body">
+					<form  
+						@submit.prevent="saveProducto" 
+						class="form-group" 
+						autocomplete="off"
+					>
+						<div class="form-group">
+							<label for="codigo">Codigo</label>
+							<input 
+								v-model="codigo" 
+								type="text" 
+								class="form-control" 
+								id="codigo" 
+								aria-describedby="codigoHelp"
+							/>
+							<small 
+								id="codigoHelp" 
+								class="form-text text-muted"
+							>
+								Ingrese el codigo de barras.
+							</small>
+							<small 
+								id="codigoError" 
+								class="form-text text-danger"
+							>
+								{{ error.codigo }}
+							</small>
+						</div>
+						<div class="form-group">
+							<label for="categoria">Categoría</label>
+							<select 
+								v-model="categoria_id" 
+								class="form-control" 
+								id="categoria" 
+								aria-describedby="categoriaHelp"
+							>
+								<option disabled value="">Seleccione una categoría</option>
+								<option 
+									v-for="(categoria,key) in categorias" 
+									:value="key"
+								>
+									{{ categoria }}
+								</option>
+							</select>
+							<small 
+								id="categoriaHelp" 
+								class="form-text text-muted"
+							>
+								Indique la categoría del producto.
+							</small>
+							<small 
+								id="categoriaHelpError" 
+								class="form-text text-danger"
+							>	
+								{{ error.unidad_id }}
+							</small>
+						</div>
+						<div class="form-group">
+							<label for="nombreProducto">Producto</label>
+							<input 
+								v-model="nombre_producto" 
+								type="text" 
+								class="form-control" 
+								id="nombreProducto" 
+								aria-describedby="nombreHelp" 
+								placeholder="Producto" 
+								onKeyPress="return soloLetrasNumeros(event)"
+							/>
+							<small 
+								id="nombreHelp" 
+								class="form-text text-muted"
+							>
+								Ingrese el nombre del producto.
+							</small>
+							<small 
+								id="nombreError" 
+								class="form-text text-danger"
+							>
+								{{ error.nombre_producto }}
+							</small>
+						</div>
+						<div class="form-group">
+							<label for="unidad">Tipo de unidad</label>
+							<select 
+								v-model="unidad_id" 
+								class="form-control" 
+								id="unidad" 
+								aria-describedby="unidadHelp"
+							>
+								<option disabled value="">Seleccione un tipo</option>
+								<option 
+									v-for="(unidad,key) in unidades" 
+									:value="key"
+								>
+									{{ unidad }}
+								</option>
+							</select>
+							<small 
+								id="unidadHelp" 
+								class="form-text text-muted"
+							>
+								Indique si el producto se mide por UND o Kg.
+							</small>
+							<small 
+								id="unidadError" 
+								class="form-text text-danger"
+							>
+								{{ error.unidad_id }}
+							</small>
+						</div>
+						<div 
+							v-if="mostrarPrecio==true" 
+							class="form-group"
+						>
+							<label for="precio">Precio</label>
+							<input 
+								v-model="precio_venta" 
+								type="text" 
+								class="form-control" 
+								id="precio" 
+								aria-describedby="precioHelp" 
+								placeholder="Precio" 
+								onKeyPress="return soloNumeros(event)"
+							/>
+							<small 
+								id="precioHelp" 
+								class="form-text text-muted"
+							>
+								Ingrese el precio de venta del producto por UND o Kg.
+							</small>
+							<small 
+								id="precioError"
+								class="form-text text-danger"
+							>
+								{{ error.precio_venta }}
+							</small>
+						</div>
+						<div class="form-group" align="center">
+							<button 
+								type="submit" 
+								class="btn btn-success"
+							>
+								Guardar
+							</button> 
+							<button 
+								@click="reset()"
+								class="btn btn-secondary" 
+								data-dismiss="modal"
+							>
+								Cancelar
+							</button>
+						</div>
+					</form>
 				</div>
-				<div class="form-group">
-					<label for="nombreProducto">Producto</label>
-					<input v-model="nombre_producto" type="text" class="form-control" id="nombreProducto" aria-describedby="nombreHelp" placeholder="Producto" onKeyPress="return soloLetrasNumeros(event)">
-					<small id="nombreHelp" class="form-text text-muted">Ingrese el nombre del producto.</small>
-					<small id="nombreError" class="form-text text-danger">{{ error.nombre_producto }}</small>
-				</div>
-				<div class="form-group">
-					<label for="unidad">Tipo de unidad</label>
-					<select v-model="unidad_id" class="form-control" id="unidad" aria-describedby="unidadHelp">
-						<option disabled value="">Seleccione un tipo</option>
-						<option v-for="(unidad,key) in unidades" :value="key">{{ unidad }}</option>
-					</select>
-					<small id="unidadHelp" class="form-text text-muted">Indique si el producto se mide por UND o Kg.</small>
-					<small id="unidadError" class="form-text text-danger">{{ error.unidad_id }}</small>
-				</div>
-				<div class="form-group">
-					<label for="precio">Precio</label>
-					<input v-model="precio_venta" type="text" class="form-control" id="precio" aria-describedby="precioHelp" placeholder="Precio" onKeyPress="return soloNumeros(event)">
-					<small id="precioHelp" class="form-text text-muted">Ingrese el precio de venta del producto por UND o Kg.</small>
-					<small id="precioError" class="form-text text-danger">{{ error.precio_venta }}</small>
-				</div>
-				<div class="form-group" align="center">
-					<button type="submit" class="btn btn-success">Guardar</button> 
-					<button type="button" @click="reset()" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				</div>
-	        </form>
-	      </div>
-	    </div>
-	  </div>
+			</div>
+		</div>
 	</div>
 </template>
 <script>
@@ -74,6 +205,7 @@
 	 			update : 0,
 	 			unidades: {},
 	 			categorias: {},
+	 			mostrarPrecio: false,
 	 			error: {
 	 				nombre_producto: null,
 	 				categoria_id: null,
@@ -83,14 +215,42 @@
 	 			}
 	 		}
 	 	},
+	 	created(){
+        	//Imprime los errores de validación.
+			EventBus.$on('producto-error', data => {
+				this.error = {};
+				if(data.errors.nombre_producto){
+					this.error.nombre_producto = data.errors.nombre_producto;
+				}
+				if (data.errors.unidad_id){
+					this.error.unidad_id = data.errors.unidad_id;
+				}
+				if (data.errors.categoria_id){
+					this.error.categoria_id = data.errors.categoria_id;
+				}
+				if (data.errors.precio_venta){
+					this.error.precio_venta = data.errors.precio_venta;
+				}
+				if (data.errors.codigo){
+					this.error.codigo = data.errors.codigo;
+				}
+			});
+		},
         mounted() {
-        	this.codigo = this.codigoPrevio;
+        	//Asignaciones cuando se reciben las propiedades.
+        	if (this.codigoPrevio != undefined) {
+        		this.codigo = this.codigoPrevio;
+        	}
         	//Hace el focus al abrir la modal
         	$(function(){ $('#crearProducto').on('shown.bs.modal', function (){ $('#codigo').focus(); }); });  
-        	//Carga los datos del select de tipo de unidad en la modal.
-        	axios.get('http://beta.test/productos').then(response => { 	this.unidades =  response.data.unidades })
-        	//Carga los datos del select de categoria en la modal.
-        	axios.get('http://beta.test/productos').then(response => { 	this.categorias =  response.data.categorias })
+        	//Carga los datos del select de tipo de unidad y  categoria en la modal.
+        	axios
+        		.get('http://beta.test/productos')
+        		.then(response => { 	
+        			this.unidades =  response.data.unidades;
+        			this.categorias =  response.data.categorias; 
+        		})
+        	;
             //Carga los datos del producto en la modal cuando se edita.
             EventBus.$on('producto-edit', data => {
 				this.nombre_producto = data.nombre_producto;
@@ -101,86 +261,69 @@
 	 			this.codigo = data.codigo;
 	 			this.update = 1;
 	 			this.titulo = "Editar Producto";
+	 			this.mostrarPrecio = true;
 			});
         },
-        created(){
-        	//Imprime los errores de validación.
-			EventBus.$on('producto-error', data => {
-				this.error = {}
-				if(data.errors.nombre_producto)
-				{
-					this.error.nombre_producto = data.errors.nombre_producto
-				}
-				if (data.errors.unidad_id) 
-				{
-					this.error.unidad_id = data.errors.unidad_id
-				}
-				if (data.errors.categoria_id) 
-				{
-					this.error.categoria_id = data.errors.categoria_id
-				}
-				if (data.errors.precio_venta) 
-				{
-					this.error.precio_venta = data.errors.precio_venta
-				}
-				if (data.errors.codigo) 
-				{
-					this.error.codigo = data.errors.codigo
-				}
-			});
-		},
+        beforeDestroy(){
+    		EventBus.$off('producto-edit');
+    		EventBus.$off('producto-error');
+  		},
         methods: {
         	//Envia los datos al controlador para guardar o editar un registro.
         	saveProducto: function(){
         		let metodo = this;
         		//Guardar registro.
-        		if (this.update == 0)
-        		{
-        			axios.post('http://beta.test/productos',{
-	        			nombre_producto: this.nombre_producto,
-		 				unidad_id: this.unidad_id,
-		 				categoria_id: this.categoria_id,
-		 				precio_venta: this.precio_venta,
-		 				codigo: this.codigo,
-        			}).then(function(response){
-        				//Si recibe el codigoPrevio vuelve al modulo de la factura
-    					//de lo contrario actua como si fuera el modulo de productos.
-	        			if (metodo.codigoPrevio == undefined) 
-	        			{
-	        				//Evento para hacer la actualizacion de registros al crear registros.
-							EventBus.$emit('producto-added',response.data.productos)
-		    			}
-		    			else
-		    			{
-		    				//Evento para volver al modulo factura.
-		    				EventBus.$emit('volver-moduloAdd',[false,1])
-		    			}
-						metodo.reset();
-        			}).catch(function(error){
-        				//Evento para enviar los errores al intentar crear registros.
-        				EventBus.$emit('producto-error',error.response.data)
-        				console.log(error)
-        			});
+        		if (this.update == 0){
+        			axios
+        				.post('http://beta.test/productos',{
+		        			nombre_producto: this.nombre_producto,
+			 				unidad_id: this.unidad_id,
+			 				categoria_id: this.categoria_id,
+			 				precio_venta: 0,
+			 				codigo: this.codigo,
+        				})
+        				.then( response => {
+	        				//Si recibe el codigoPrevio vuelve al modulo de la factura
+	    					//de lo contrario actua como si fuera el modulo de productos.
+		        			if (metodo.codigoPrevio == undefined) {
+		        				//Evento para hacer la actualizacion de registros al crear registros.
+								EventBus.$emit('producto-added',response.data.productos);
+			    			}
+			    			else {
+			    				//Evento para volver al modulo factura.
+			    				EventBus.$emit('volver-moduloAdd',[false,1,response.data.productos]);
+			    			}
+							metodo.reset();
+	        			})
+	        			.catch( error => {
+	        				//Evento para enviar los errores al intentar crear registros.
+	        				EventBus.$emit('producto-error',error.response.data);
+	        				console.log(error);
+	        			})
+	        		;
         		}
         		//Editar registro.
-        		else
-        		{
-        			axios.put('http://beta.test/productos/'+this.slug,{
-	        			nombre_producto: this.nombre_producto,
-		 				unidad_id: this.unidad_id,
-		 				categoria_id: this.categoria_id,
-		 				precio_venta: this.precio_venta,
-		 				codigo: this.codigo,
-		 				slug: this.slug,
-        			}).then(function(response){
-        				//Evento para hacer la actualizacion de registros al editar registros.
-        				EventBus.$emit('producto-update',response.data.productos)
-						metodo.reset();
-        			}).catch(function(error){
-        				//Evento para enviar los errores al intentar editar registros.
-        				EventBus.$emit('producto-error',error.response.data)
-        				console.log(error)
-        			});
+        		else {
+        			axios
+	        			.put('http://beta.test/productos/'+this.slug,{
+		        			nombre_producto: this.nombre_producto,
+			 				unidad_id: this.unidad_id,
+			 				categoria_id: this.categoria_id,
+			 				precio_venta: this.precio_venta,
+			 				codigo: this.codigo,
+			 				slug: this.slug,
+	        			})
+	        			.then( response => {
+	        				//Evento para hacer la actualizacion de registros al editar registros.
+	        				EventBus.$emit('producto-update',response.data.productos);
+							metodo.reset();
+	        			})
+	        			.catch( error => {
+	        				//Evento para enviar los errores al intentar editar registros.
+	        				EventBus.$emit('producto-error',error.response.data);
+	        				console.log(error);
+	        			})
+	        		;
         		}
         	},
         	//Limpia la modal.
@@ -192,23 +335,20 @@
 	 			this.codigo = "";
 	 			this.slug = "";
 	 			this.titulo = "Nuevo Producto";
+	 			this.mostrarPrecio = false;
 	 			this.update = 0;
 	 			this.error = {};
 	 			$('#crearProducto').modal('hide');
     			$('body').removeClass('modal-open');
-    			//$(document.body).removeClass('modal-open');
     			//Si recibe el codigoPrevio vuelve al modulo de la factura
     			//de lo contrario actua como si fuera el modulo de productos.
 				if (this.codigoPrevio == undefined) {
 					$('.modal-backdrop').remove();
     			}
-    			else
-    			{
-    				EventBus.$emit('volver-moduloAdd',[false,0])
+    			else {
+    				EventBus.$emit('volver-moduloAdd',[false,0]);
     			}
         	},
-        	
-        },
-       
+        },  
     }
 </script>
