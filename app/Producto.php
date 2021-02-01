@@ -17,7 +17,7 @@ class Producto extends Model
      *
      * @var array
      */
-	protected $fillable = ['nombre_producto','codigo','unidad_id','slug','precio_venta'];
+	protected $fillable = ['nombre_producto','codigo','unidad_id','slug','precio_venta','disponibilidad'];
     
     /**
      * Get the route key for the model.

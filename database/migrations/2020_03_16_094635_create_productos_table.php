@@ -21,6 +21,7 @@ class CreateProductosTable extends Migration
             $table->integer('unidad_id')->unsigned();
             $table->integer('categoria_id')->unsigned();
             $table->integer('precio_venta');
+            $table->integer('disponibilidad');
             $table->timestamps();            
             $table->foreign('unidad_id')->references('id')->on('unidades')
                     ->onUpdate('cascade')

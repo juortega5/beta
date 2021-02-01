@@ -64,6 +64,7 @@ class ProductoController extends Controller
             $producto->unidad_id = $request->input('unidad_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->precio_venta = $request->input('precio_venta');
+            $producto->disponibilidad = 0;
             $producto->save();
             $productos = Producto::with('unidad')->with('categoria')->where('productos.slug', $producto->slug)->first();
             return response()->json(["message"=>"Producto creado","productos"=>$productos],200);
